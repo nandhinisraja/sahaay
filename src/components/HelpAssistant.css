@@ -1,0 +1,480 @@
+/* =========================================================
+   SAHAAY HELP ASSISTANT
+========================================================= */
+
+.help-assistant {
+  width: 100% !important;
+  max-width: 1050px !important;
+  margin: 0 auto !important;
+  padding: 55px 25px 80px !important;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.assistant-header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.assistant-header h2 {
+  margin: 0 0 10px;
+  font-size: 34px;
+  color: #124f48;
+}
+
+.assistant-header p {
+  margin: 0;
+  color: #78918d;
+  font-size: 17px;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.help-form {
+  width: 100% !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 18px !important;
+
+  padding: 28px !important;
+
+  background: #ffffff !important;
+
+  border: 1px solid #dcebe7 !important;
+
+  border-radius: 24px !important;
+
+  box-shadow: 0 15px 40px rgba(21, 81, 72, 0.08) !important;
+}
+
+
+/* =========================================================
+   REQUEST BOX
+========================================================= */
+
+.request-box {
+  width: 100% !important;
+  position: relative !important;
+  display: block !important;
+}
+
+
+/* =========================================================
+   TEXTAREA
+========================================================= */
+
+.request-box textarea {
+  display: block !important;
+
+  width: 100% !important;
+
+  height: 150px !important;
+  min-height: 150px !important;
+
+  resize: vertical !important;
+
+  padding: 18px !important;
+
+  padding-right: 120px !important;
+
+  margin: 0 !important;
+
+  border: 1px solid #d4e5e1 !important;
+
+  border-radius: 15px !important;
+
+  outline: none !important;
+
+  background: #fbfefd !important;
+
+  color: #244b46 !important;
+
+  font-family: Arial, sans-serif !important;
+
+  font-size: 16px !important;
+
+  line-height: 1.5 !important;
+
+  box-sizing: border-box !important;
+}
+
+.request-box textarea:focus {
+  border-color: #13786c !important;
+
+  background: #ffffff !important;
+
+  box-shadow: 0 0 0 3px rgba(19, 120, 108, 0.08) !important;
+}
+
+.request-box textarea::placeholder {
+  color: #9aadaa !important;
+}
+
+
+/* =========================================================
+   VOICE BUTTON
+========================================================= */
+
+.voice-button {
+  position: absolute !important;
+
+  right: 14px !important;
+  bottom: 14px !important;
+
+  width: auto !important;
+
+  height: 42px !important;
+
+  padding: 0 14px !important;
+
+  margin: 0 !important;
+
+  border: 1px solid #cfe1dd !important;
+
+  border-radius: 10px !important;
+
+  background: #eaf6f3 !important;
+
+  color: #13786c !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  justify-content: center !important;
+
+  gap: 7px !important;
+
+  font-size: 13px !important;
+
+  font-weight: 700 !important;
+
+  cursor: pointer !important;
+}
+
+.voice-button:hover {
+  background: #dcefeb !important;
+}
+
+.voice-button.listening {
+  background: #13786c !important;
+  color: #ffffff !important;
+}
+
+
+/* =========================================================
+   LOCATION
+========================================================= */
+
+.location-input {
+  width: 100% !important;
+
+  height: 56px !important;
+  min-height: 56px !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  gap: 12px !important;
+
+  padding: 0 17px !important;
+
+  margin: 0 !important;
+
+  border: 1px solid #d4e5e1 !important;
+
+  border-radius: 13px !important;
+
+  background: #fbfefd !important;
+
+  color: #13786c !important;
+
+  box-sizing: border-box !important;
+}
+
+.location-input svg {
+  flex-shrink: 0 !important;
+
+  color: #13786c !important;
+}
+
+.location-input input {
+  width: 100% !important;
+
+  height: 100% !important;
+
+  padding: 0 !important;
+
+  margin: 0 !important;
+
+  border: none !important;
+
+  outline: none !important;
+
+  background: transparent !important;
+
+  color: #244b46 !important;
+
+  font-size: 16px !important;
+
+  box-sizing: border-box !important;
+}
+
+.location-input input::placeholder {
+  color: #9aadaa !important;
+}
+
+
+/* =========================================================
+   FIND HELP BUTTON
+========================================================= */
+
+.help-form > button[type="submit"] {
+  width: 100% !important;
+
+  height: 56px !important;
+  min-height: 56px !important;
+
+  padding: 0 20px !important;
+
+  margin: 0 !important;
+
+  border: none !important;
+
+  border-radius: 13px !important;
+
+  background: #13786c !important;
+
+  color: #ffffff !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  justify-content: center !important;
+
+  gap: 9px !important;
+
+  font-size: 16px !important;
+
+  font-weight: 700 !important;
+
+  cursor: pointer !important;
+}
+
+.help-form > button[type="submit"]:hover {
+  background: #0e665c !important;
+}
+
+.help-form > button[type="submit"]:disabled {
+  opacity: 0.65 !important;
+
+  cursor: not-allowed !important;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.spin {
+  animation: saahay-spin 1s linear infinite !important;
+}
+
+@keyframes saahay-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   RESULTS
+========================================================= */
+
+.results-section {
+  width: 100%;
+  margin-top: 45px;
+}
+
+.results-heading {
+  width: 100%;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 22px;
+}
+
+.results-heading h3 {
+  margin: 0;
+
+  color: #124f48;
+
+  font-size: 27px;
+}
+
+.results-heading p {
+  margin: 5px 0 0;
+
+  color: #78918d;
+}
+
+.emergency-badge {
+  padding: 8px 14px;
+
+  border-radius: 20px;
+
+  background: #fff0ed;
+
+  border: 1px solid #f4c7c0;
+
+  color: #c94735;
+
+  font-size: 13px;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   RESOURCE GRID
+========================================================= */
+
+.resource-grid {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 22px;
+}
+
+
+/* =========================================================
+   NO RESULTS
+========================================================= */
+
+.no-results {
+  width: 100%;
+
+  padding: 40px;
+
+  text-align: center;
+
+  background: #ffffff;
+
+  border: 1px solid #dceae7;
+
+  border-radius: 18px;
+}
+
+.no-results h3 {
+  margin: 0 0 10px;
+
+  color: #174f48;
+}
+
+.no-results p {
+  margin: 0;
+
+  color: #78918d;
+}
+
+
+/* =========================================================
+   SEARCH AGAIN
+========================================================= */
+
+.clear-search-wrapper {
+  width: 100%;
+
+  display: flex;
+
+  justify-content: center;
+
+  margin-top: 30px;
+}
+
+.clear-search {
+  padding: 11px 20px;
+
+  border: 1px solid #cfe1dd;
+
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  color: #13786c;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.clear-search:hover {
+  background: #eaf6f3;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 800px) {
+
+  .help-assistant {
+    padding: 35px 15px 60px !important;
+  }
+
+  .resource-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .results-heading {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 12px;
+  }
+}
+
+
+@media (max-width: 500px) {
+
+  .help-form {
+    padding: 17px !important;
+  }
+
+  .request-box textarea {
+    padding-right: 15px !important;
+  }
+
+  .voice-button {
+    position: static !important;
+
+    width: 100% !important;
+
+    margin-top: 8px !important;
+  }
+}

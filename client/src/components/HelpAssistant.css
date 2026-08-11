@@ -1,0 +1,452 @@
+/* =========================================================
+   SAHAAY - HELP ASSISTANT
+   CSS FOR CURRENT HelpAssistant.jsx
+========================================================= */
+
+.help-assistant {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 45px 25px 80px;
+}
+
+/* ================= HEADER ================= */
+
+.assistant-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.assistant-header h2 {
+  margin: 0 0 10px;
+  font-size: 34px;
+  font-weight: 700;
+  color: #124f48;
+}
+
+.assistant-header p {
+  margin: 0;
+  font-size: 17px;
+  color: #78918d;
+}
+
+
+/* ================= FORM ================= */
+
+.help-form {
+  width: 100%;
+  background: #ffffff;
+
+  padding: 30px;
+
+  border: 1px solid #dcebe7;
+  border-radius: 24px;
+
+  box-shadow: 0 12px 35px rgba(20, 80, 70, 0.08);
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  margin: 0;
+}
+
+
+/* =========================================================
+   TEXTAREA
+   IMPORTANT:
+   This targets textarea DIRECTLY inside .help-form
+========================================================= */
+
+.help-form textarea {
+  display: block;
+
+  width: 100%;
+  height: 150px;
+  min-height: 150px;
+
+  padding: 18px;
+
+  margin: 0;
+
+  resize: vertical;
+
+  border: 1px solid #d2e3df;
+  border-radius: 15px;
+
+  outline: none;
+
+  background: #fbfefd;
+
+  color: #244b46;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+
+  box-sizing: border-box;
+
+  transition: all 0.2s ease;
+}
+
+.help-form textarea:focus {
+  border-color: #13786c;
+
+  background: #ffffff;
+
+  box-shadow: 0 0 0 3px rgba(19, 120, 108, 0.08);
+}
+
+.help-form textarea::placeholder {
+  color: #9aaaa7;
+}
+
+
+/* =========================================================
+   LOCATION
+========================================================= */
+
+.help-form .location-input {
+  width: 100%;
+
+  height: 56px;
+  min-height: 56px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 0 17px;
+
+  margin: 0;
+
+  border: 1px solid #d2e3df;
+  border-radius: 13px;
+
+  background: #fbfefd;
+
+  color: #13786c;
+
+  box-sizing: border-box;
+
+  transition: all 0.2s ease;
+}
+
+.help-form .location-input:focus-within {
+  border-color: #13786c;
+
+  background: #ffffff;
+
+  box-shadow: 0 0 0 3px rgba(19, 120, 108, 0.08);
+}
+
+.help-form .location-input svg {
+  width: 20px;
+  height: 20px;
+
+  flex-shrink: 0;
+
+  color: #13786c;
+}
+
+.help-form .location-input input {
+  width: 100%;
+  height: 100%;
+
+  padding: 0;
+  margin: 0;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #244b46;
+
+  font-size: 16px;
+
+  font-family: Arial, Helvetica, sans-serif;
+
+  box-sizing: border-box;
+}
+
+.help-form .location-input input::placeholder {
+  color: #9aaaa7;
+}
+
+
+/* =========================================================
+   FIND HELP BUTTON
+
+   This matches the button directly inside the form
+========================================================= */
+
+.help-form > button {
+  width: 100%;
+  height: 56px;
+  min-height: 56px;
+
+  padding: 0 20px;
+  margin: 0;
+
+  border: none;
+  border-radius: 13px;
+
+  background: #13786c;
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.help-form > button:hover {
+  background: #0d665b;
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 8px 20px rgba(19, 120, 108, 0.18);
+}
+
+.help-form > button:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+
+/* =========================================================
+   SPEAK BUTTON
+
+   Works if your Speak button is inside the form
+========================================================= */
+
+.help-form .voice-button {
+  width: auto;
+
+  height: 42px;
+
+  padding: 0 15px;
+
+  border: 1px solid #cfe1dd;
+  border-radius: 10px;
+
+  background: #eaf6f3;
+
+  color: #13786c;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.help-form .voice-button:hover {
+  background: #dcefeb;
+}
+
+.help-form .voice-button.listening {
+  background: #13786c;
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   IF SPEAK BUTTON IS DIRECTLY AFTER TEXTAREA
+========================================================= */
+
+.help-form textarea + button {
+  width: auto;
+
+  height: 42px;
+
+  padding: 0 15px;
+
+  border: 1px solid #cfe1dd;
+  border-radius: 10px;
+
+  background: #eaf6f3;
+
+  color: #13786c;
+
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   RESULTS
+========================================================= */
+
+.results-section {
+  width: 100%;
+  margin-top: 40px;
+}
+
+.results-heading {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 22px;
+}
+
+.results-heading h3 {
+  margin: 0;
+
+  font-size: 27px;
+
+  color: #124f48;
+}
+
+.results-heading p {
+  margin: 5px 0 0;
+
+  color: #78918d;
+
+  font-size: 15px;
+}
+
+.emergency-badge {
+  padding: 8px 14px;
+
+  border-radius: 20px;
+
+  background: #fff0ed;
+
+  border: 1px solid #f4c7c0;
+
+  color: #c94735;
+
+  font-size: 13px;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   RESOURCE GRID
+========================================================= */
+
+.resource-grid {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 22px;
+}
+
+
+/* =========================================================
+   NO RESULTS
+========================================================= */
+
+.no-results {
+  width: 100%;
+
+  padding: 40px;
+
+  text-align: center;
+
+  background: #ffffff;
+
+  border: 1px solid #dceae7;
+
+  border-radius: 18px;
+}
+
+.no-results h3 {
+  margin: 0 0 10px;
+
+  color: #174f48;
+}
+
+.no-results p {
+  margin: 0;
+
+  color: #78918d;
+}
+
+
+/* =========================================================
+   LOADING SPINNER
+========================================================= */
+
+.spin {
+  animation: saahay-spin 1s linear infinite;
+}
+
+@keyframes saahay-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 800px) {
+
+  .help-assistant {
+    padding: 35px 15px 60px;
+  }
+
+  .assistant-header h2 {
+    font-size: 28px;
+  }
+
+  .resource-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .results-heading {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+
+
+@media (max-width: 500px) {
+
+  .help-form {
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  .help-form textarea {
+    height: 160px;
+    min-height: 160px;
+  }
+
+  .help-form > button {
+    height: 52px;
+  }
+}

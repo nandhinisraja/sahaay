@@ -1,0 +1,473 @@
+/* =========================================================
+   SAHAAY RESOURCES PAGE
+========================================================= */
+
+.resources-page {
+  width: 100%;
+  min-height: 100vh;
+
+  padding: 45px 7% 80px;
+
+  background: #f4faf8;
+
+  color: #173f3a;
+
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.resources-hero {
+  width: 100%;
+
+  padding: 30px 0 35px;
+}
+
+.resources-hero-content {
+  max-width: 750px;
+}
+
+.resources-label {
+  display: inline-block;
+
+  margin-bottom: 12px;
+
+  color: #13786c;
+
+  font-size: 13px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+}
+
+.resources-hero h1 {
+  margin: 0 0 12px;
+
+  color: #124f48;
+
+  font-size: 42px;
+
+  line-height: 1.15;
+
+  font-weight: 800;
+}
+
+.resources-hero p {
+  max-width: 650px;
+
+  margin: 0;
+
+  color: #718985;
+
+  font-size: 17px;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.resources-search-section {
+  width: 100%;
+
+  display: flex;
+
+  gap: 15px;
+
+  margin-bottom: 25px;
+}
+
+.resources-search-box {
+  flex: 1;
+
+  height: 55px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 0 17px;
+
+  background: #ffffff;
+
+  border: 1px solid #d9e9e5;
+
+  border-radius: 13px;
+
+  color: #13786c;
+
+  box-shadow: 0 5px 20px rgba(20, 80, 70, 0.05);
+}
+
+.resources-search-box:focus-within {
+  border-color: #13786c;
+
+  box-shadow:
+    0 0 0 3px rgba(19, 120, 108, 0.08);
+}
+
+.resources-search-box input {
+  width: 100%;
+
+  height: 100%;
+
+  border: none;
+
+  outline: none;
+
+  background: transparent;
+
+  font-size: 15px;
+
+  color: #244b46;
+}
+
+.resources-search-box input::placeholder {
+  color: #9aaaa7;
+}
+
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+.category-filter {
+  height: 55px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 0 15px;
+
+  background: #ffffff;
+
+  border: 1px solid #d9e9e5;
+
+  border-radius: 13px;
+
+  color: #13786c;
+}
+
+.category-filter select {
+  height: 100%;
+
+  min-width: 145px;
+
+  border: none;
+
+  outline: none;
+
+  background: transparent;
+
+  color: #244b46;
+
+  font-size: 15px;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   CATEGORY BUTTONS
+========================================================= */
+
+.category-buttons {
+  width: 100%;
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 10px;
+
+  margin-bottom: 40px;
+}
+
+.category-button {
+  height: 42px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 0 15px;
+
+  border: 1px solid #d6e7e3;
+
+  border-radius: 22px;
+
+  background: #ffffff;
+
+  color: #50716c;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.category-button:hover {
+  border-color: #13786c;
+
+  color: #13786c;
+
+  transform: translateY(-1px);
+}
+
+.category-button.active {
+  background: #13786c;
+
+  border-color: #13786c;
+
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   RESULTS HEADER
+========================================================= */
+
+.resources-results-header {
+  width: 100%;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 22px;
+}
+
+.resources-results-header h2 {
+  margin: 0 0 5px;
+
+  color: #124f48;
+
+  font-size: 28px;
+}
+
+.resources-results-header p {
+  margin: 0;
+
+  color: #78918d;
+
+  font-size: 14px;
+}
+
+.saved-count {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 9px 14px;
+
+  border-radius: 20px;
+
+  background: #ffffff;
+
+  border: 1px solid #d9e9e5;
+
+  color: #13786c;
+
+  font-size: 13px;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   RESOURCE GRID
+========================================================= */
+
+.resources-grid {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 22px;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.resources-empty {
+  width: 100%;
+
+  padding: 70px 25px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  background: #ffffff;
+
+  border: 1px solid #dcebe7;
+
+  border-radius: 22px;
+
+  color: #78918d;
+}
+
+.resources-empty h3 {
+  margin: 15px 0 8px;
+
+  color: #124f48;
+
+  font-size: 22px;
+}
+
+.resources-empty p {
+  margin: 0 0 20px;
+
+  font-size: 15px;
+}
+
+.resources-empty button {
+  padding: 11px 20px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #13786c;
+
+  color: #ffffff;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   LOCATION INFO
+========================================================= */
+
+.resources-info {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 16px;
+
+  margin-top: 45px;
+
+  padding: 22px;
+
+  border-radius: 18px;
+
+  background: #eaf6f3;
+
+  color: #13786c;
+}
+
+.resources-info h3 {
+  margin: 0 0 5px;
+
+  color: #124f48;
+
+  font-size: 17px;
+}
+
+.resources-info p {
+  margin: 0;
+
+  color: #66817c;
+
+  font-size: 14px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 850px) {
+
+  .resources-page {
+    padding: 35px 20px 60px;
+  }
+
+  .resources-hero h1 {
+    font-size: 34px;
+  }
+
+  .resources-search-section {
+    flex-direction: column;
+  }
+
+  .category-filter select {
+    width: 100%;
+  }
+
+  .resources-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+@media (max-width: 500px) {
+
+  .resources-page {
+    padding: 25px 15px 50px;
+  }
+
+  .resources-hero h1 {
+    font-size: 29px;
+  }
+
+  .resources-hero p {
+    font-size: 15px;
+  }
+
+  .resources-results-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 12px;
+  }
+
+  .category-buttons {
+    gap: 7px;
+  }
+
+  .category-button {
+    font-size: 13px;
+  }
+
+}

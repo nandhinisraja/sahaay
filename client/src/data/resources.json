@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1,
+    "title": "Free Government Hospital",
+    "category": "Healthcare",
+    "description": "Government healthcare services providing affordable medical consultation, treatment and emergency support.",
+    "location": "Kanchipuram",
+    "availability": "Monday - Sunday, 24 hours",
+    "phone": "044-00000000",
+    "eligibility": "Open to the general public.",
+    "cost": "Free / Low Cost"
+  },
+  {
+    "id": 2,
+    "title": "Community Health Clinic",
+    "category": "Healthcare",
+    "description": "Primary healthcare support including basic medical consultation and health assistance.",
+    "location": "Chennai",
+    "availability": "Monday - Saturday, 9 AM - 5 PM",
+    "phone": "044-00000001",
+    "eligibility": "Residents and community members.",
+    "cost": "Free"
+  },
+  {
+    "id": 3,
+    "title": "Student Career Guidance",
+    "category": "Education",
+    "description": "Career guidance, mentoring and educational resources for students.",
+    "location": "Kanchipuram",
+    "availability": "Monday - Friday, 9 AM - 5 PM",
+    "phone": "9876543212",
+    "eligibility": "Students and young learners.",
+    "cost": "Free"
+  },
+  {
+    "id": 4,
+    "title": "Scholarship Support Centre",
+    "category": "Education",
+    "description": "Information and assistance for students searching for scholarships and financial support.",
+    "location": "Chennai",
+    "availability": "Monday - Friday, 9 AM - 5 PM",
+    "phone": "9876543213",
+    "eligibility": "Eligible school and college students.",
+    "cost": "Free"
+  },
+  {
+    "id": 5,
+    "title": "Community Learning Centre",
+    "category": "Education",
+    "description": "Learning support, educational materials and guidance for students.",
+    "location": "Kanchipuram",
+    "availability": "Monday - Saturday, 10 AM - 6 PM",
+    "phone": "9876543214",
+    "eligibility": "Students and learners.",
+    "cost": "Free"
+  },
+  {
+    "id": 6,
+    "title": "Medical Assistance Centre",
+    "category": "Healthcare",
+    "description": "Community medical assistance and basic health support for people in need.",
+    "location": "Chennai",
+    "availability": "Monday - Saturday, 9 AM - 6 PM",
+    "phone": "044-00000002",
+    "eligibility": "General public.",
+    "cost": "Free"
+  }
+]
