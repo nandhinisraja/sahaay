@@ -24,16 +24,15 @@ app.get("/api/health", (req, res) => {
 
 // Analyze route
 app.post("/api/analyze", (req, res) => {
-  const { text } = req.body;
+  const { problem, location, language } = req.body;
 
-  if (!text) {
+  if (!problem || !location || !language) {
     return res.status(400).json({
       status: "error",
-      message: "Text is required"
+      message: "Problem, location and language are required"
     });
   }
 
-  // Basic analysis for now
   const suspiciousWords = [
     "urgent",
     "winner",
@@ -47,10 +46,10 @@ app.post("/api/analyze", (req, res) => {
     "blocked"
   ];
 
-  const lowerText = text.toLowerCase();
+  const text = `${problem} ${location} ${language}`.toLowerCase();
 
-  const foundWords = suspiciousWords.filter(word =>
-    lowerText.includes(word)
+  const foundWords = suspiciousWords.filter((word) =>
+    text.includes(word)
   );
 
   const risk =
@@ -73,6 +72,7 @@ app.post("/api/analyze", (req, res) => {
   });
 });
 
+// Start server
 const PORT = process.env.PORT || 5001;
 
 app.listen(PORT, () => {
