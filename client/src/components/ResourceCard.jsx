@@ -4,11 +4,12 @@ import {
   Clock,
   Bookmark,
   Share2,
-  Navigation
+  Navigation,
+  Globe,
+  Star
 } from "lucide-react";
 
 import "./ResourceCard.css";
-
 
 function ResourceCard({
   resource,
@@ -16,52 +17,86 @@ function ResourceCard({
   onSave
 }) {
 
+  // ==========================================
+  // DIRECTIONS
+  // ==========================================
+
   const handleDirections = () => {
 
-    if (!resource.location) {
+    // Use backend map URL if available
+    if (resource.mapUrl) {
+      window.open(resource.mapUrl, "_blank");
+      return;
+    }
+
+    // Otherwise create Google Maps search
+    const location =
+      resource.address ||
+      resource.location ||
+      resource.name ||
+      resource.title;
+
+    if (!location) {
+      alert("Location not available.");
       return;
     }
 
     const url =
       "https://www.google.com/maps/search/?api=1&query=" +
-      encodeURIComponent(resource.location);
+      encodeURIComponent(location);
 
-    window.open(
-      url,
-      "_blank"
-    );
-
+    window.open(url, "_blank");
   };
 
 
+  // ==========================================
+  // CALL
+  // ==========================================
+
   const handleCall = () => {
 
-    if (!resource.phone) {
+    const phone =
+      resource.phone;
+
+    if (
+      !phone ||
+      phone === "Phone number not available"
+    ) {
       alert("Phone number not available.");
       return;
     }
 
     window.location.href =
-      `tel:${resource.phone}`;
-
+      `tel:${phone}`;
   };
 
 
+  // ==========================================
+  // SHARE
+  // ==========================================
+
   const handleShare = async () => {
+
+    const title =
+      resource.name ||
+      resource.title ||
+      "SAHAAY Resource";
+
+    const address =
+      resource.address ||
+      resource.location ||
+      "";
 
     const shareData = {
 
-      title:
-        resource.title ||
-        "SAHAAY Resource",
+      title: title,
 
       text:
-        resource.description ||
-        "SAHAAY community resource",
+        `${title}\n${address}\n\nFound using SAHAAY.`,
 
       url:
+        resource.mapUrl ||
         window.location.href
-
     };
 
 
@@ -76,13 +111,12 @@ function ResourceCard({
       } else {
 
         await navigator.clipboard.writeText(
-          window.location.href
+          `${title}\n${address}\n${resource.mapUrl || ""}`
         );
 
         alert(
-          "Resource link copied!"
+          "Resource details copied!"
         );
-
       }
 
     } catch (error) {
@@ -90,26 +124,61 @@ function ResourceCard({
       console.log(
         "Share cancelled."
       );
-
     }
-
   };
 
+
+  // ==========================================
+  // RESOURCE DATA
+  // ==========================================
+
+  const title =
+    resource.name ||
+    resource.title ||
+    "Resource";
+
+
+  const address =
+    resource.address ||
+    resource.location ||
+    "Address not available";
+
+
+  const phone =
+    resource.phone ||
+    "Phone number not available";
+
+
+  const openingHours =
+    resource.openingHours ||
+    resource.availability ||
+    "Opening hours not available";
+
+
+  const type =
+    resource.type ||
+    resource.category ||
+    "Community Service";
+
+
+  // ==========================================
+  // RETURN CARD
+  // ==========================================
 
   return (
 
     <article className="resource-card">
 
 
-      {/* CATEGORY */}
+      {/* =====================================
+          TOP
+      ====================================== */}
 
       <div className="resource-card-top">
 
         <span className="resource-type">
 
-          {resource.type ||
-            resource.category ||
-            "Resource"}
+          {type}
 
         </span>
 
@@ -139,40 +208,100 @@ function ResourceCard({
       </div>
 
 
-      {/* TITLE */}
+      {/* =====================================
+          TITLE
+      ====================================== */}
 
       <h3 className="resource-title">
 
-        {resource.title ||
-          resource.name ||
-          "Resource"}
+        {title}
 
       </h3>
 
 
-      {/* DESCRIPTION */}
+      {/* =====================================
+          DESCRIPTION
+      ====================================== */}
 
       <p className="resource-description">
 
         {resource.description ||
-          "Community support resource available through SAHAAY."}
+          `Nearby ${type} available through SAHAAY.`}
 
       </p>
 
 
-      {/* DETAILS */}
+      {/* =====================================
+          DETAILS
+      ====================================== */}
 
       <div className="resource-details">
 
 
-        {resource.location && (
+        {/* ADDRESS */}
+
+        <div className="resource-detail">
+
+          <MapPin size={18} />
+
+          <span>
+
+            {address}
+
+          </span>
+
+        </div>
+
+
+        {/* PHONE */}
+
+        <div className="resource-detail">
+
+          <Phone size={18} />
+
+          <span>
+
+            {phone}
+
+          </span>
+
+        </div>
+
+
+        {/* OPENING HOURS */}
+
+        <div className="resource-detail">
+
+          <Clock size={18} />
+
+          <span>
+
+            {openingHours}
+
+          </span>
+
+        </div>
+
+
+        {/* RATING */}
+
+        {resource.rating && (
 
           <div className="resource-detail">
 
-            <MapPin size={18} />
+            <Star
+              size={18}
+              fill="currentColor"
+            />
 
             <span>
-              {resource.location}
+
+              {resource.rating}
+
+              {resource.reviewCount
+                ? ` (${resource.reviewCount} reviews)`
+                : ""}
+
             </span>
 
           </div>
@@ -180,30 +309,23 @@ function ResourceCard({
         )}
 
 
-        {resource.phone && (
+        {/* WEBSITE */}
+
+        {resource.website && (
 
           <div className="resource-detail">
 
-            <Phone size={18} />
+            <Globe size={18} />
 
-            <span>
-              {resource.phone}
-            </span>
+            <a
+              href={resource.website}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
 
-          </div>
+              Visit Website
 
-        )}
-
-
-        {resource.availability && (
-
-          <div className="resource-detail">
-
-            <Clock size={18} />
-
-            <span>
-              {resource.availability}
-            </span>
+            </a>
 
           </div>
 
@@ -212,17 +334,22 @@ function ResourceCard({
       </div>
 
 
-      {/* COST */}
+      {/* =====================================
+          COST / SOURCE
+      ====================================== */}
 
       <div className="resource-meta">
+
 
         <span>
 
           Cost:{" "}
 
           <strong>
+
             {resource.cost ||
               "Contact provider"}
+
           </strong>
 
         </span>
@@ -235,7 +362,9 @@ function ResourceCard({
             Source:{" "}
 
             <strong>
+
               {resource.source}
+
             </strong>
 
           </span>
@@ -245,9 +374,14 @@ function ResourceCard({
       </div>
 
 
-      {/* ACTIONS */}
+      {/* =====================================
+          ACTIONS
+      ====================================== */}
 
       <div className="resource-actions">
+
+
+        {/* DIRECTIONS */}
 
         <button
           type="button"
@@ -261,6 +395,8 @@ function ResourceCard({
         </button>
 
 
+        {/* CALL */}
+
         <button
           type="button"
           onClick={handleCall}
@@ -272,6 +408,8 @@ function ResourceCard({
 
         </button>
 
+
+        {/* SHARE */}
 
         <button
           type="button"
@@ -287,7 +425,9 @@ function ResourceCard({
       </div>
 
 
-      {/* LAST UPDATED */}
+      {/* =====================================
+          LAST UPDATED
+      ====================================== */}
 
       {resource.lastUpdated && (
 
@@ -304,8 +444,6 @@ function ResourceCard({
     </article>
 
   );
-
 }
-
 
 export default ResourceCard;
