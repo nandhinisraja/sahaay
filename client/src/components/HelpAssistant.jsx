@@ -152,9 +152,7 @@ function HelpAssistant({ language = "English" }) {
 
     try {
 
-      const response = await fetch(
-        "http://localhost:5001/api/analyze",
-        {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/analyze`, {
           method: "POST",
 
           headers: {
