@@ -3,43 +3,34 @@ const cors = require("cors");
 
 const app = express();
 
-
 // =====================================================
 // MIDDLEWARE
 // =====================================================
 
 app.use(cors());
-
 app.use(express.json());
-
 
 // =====================================================
 // HOME
 // =====================================================
 
 app.get("/", (req, res) => {
-
   res.json({
     status: "success",
     message: "Sahaay API is running"
   });
-
 });
-
 
 // =====================================================
 // HEALTH CHECK
 // =====================================================
 
 app.get("/api/health", (req, res) => {
-
   res.json({
     status: "success",
     message: "Sahaay server is healthy"
   });
-
 });
-
 
 // =====================================================
 // SERVICE TYPES
@@ -47,20 +38,16 @@ app.get("/api/health", (req, res) => {
 
 const serviceTypes = {
 
-  // ===================================================
-  // HEALTHCARE
-  // ===================================================
+  // ---------------- HEALTHCARE ----------------
 
   hospital: [
     '["amenity"="hospital"]',
-    '["healthcare"="hospital"]',
-    '["amenity"="clinic"]'
+    '["healthcare"="hospital"]'
   ],
 
   hospitals: [
     '["amenity"="hospital"]',
-    '["healthcare"="hospital"]',
-    '["amenity"="clinic"]'
+    '["healthcare"="hospital"]'
   ],
 
   clinic: [
@@ -81,10 +68,7 @@ const serviceTypes = {
     '["amenity"="pharmacy"]'
   ],
 
-
-  // ===================================================
-  // EDUCATION
-  // ===================================================
+  // ---------------- EDUCATION ----------------
 
   school: [
     '["amenity"="school"]'
@@ -116,10 +100,7 @@ const serviceTypes = {
     '["amenity"="university"]'
   ],
 
-
-  // ===================================================
-  // SCHOLARSHIPS
-  // ===================================================
+  // ---------------- SCHOLARSHIPS ----------------
 
   scholarship: [
     '["office"="educational_institution"]',
@@ -145,10 +126,7 @@ const serviceTypes = {
     '["amenity"="university"]'
   ],
 
-
-  // ===================================================
-  // POLICE
-  // ===================================================
+  // ---------------- POLICE ----------------
 
   police: [
     '["amenity"="police"]'
@@ -158,10 +136,7 @@ const serviceTypes = {
     '["amenity"="police"]'
   ],
 
-
-  // ===================================================
-  // BANK
-  // ===================================================
+  // ---------------- BANK ----------------
 
   bank: [
     '["amenity"="bank"]'
@@ -171,19 +146,13 @@ const serviceTypes = {
     '["amenity"="bank"]'
   ],
 
-
-  // ===================================================
-  // ATM
-  // ===================================================
+  // ---------------- ATM ----------------
 
   atm: [
     '["amenity"="atm"]'
   ],
 
-
-  // ===================================================
-  // LIBRARY
-  // ===================================================
+  // ---------------- LIBRARY ----------------
 
   library: [
     '["amenity"="library"]'
@@ -193,10 +162,7 @@ const serviceTypes = {
     '["amenity"="library"]'
   ],
 
-
-  // ===================================================
-  // BLOOD BANK
-  // ===================================================
+  // ---------------- BLOOD BANK ----------------
 
   "blood bank": [
     '["amenity"="blood_bank"]'
@@ -205,9 +171,7 @@ const serviceTypes = {
   bloodbank: [
     '["amenity"="blood_bank"]'
   ]
-
 };
-
 
 // =====================================================
 // FIND SERVICE TYPE
@@ -215,187 +179,95 @@ const serviceTypes = {
 
 function findServiceType(problem) {
 
-  const input = String(problem)
+  const input = String(problem || "")
     .toLowerCase()
     .trim();
 
-
-  // ---------------------------------------------------
   // Exact match
-  // ---------------------------------------------------
-
   if (serviceTypes[input]) {
     return input;
   }
 
-
-  // ---------------------------------------------------
   // Hospital
-  // ---------------------------------------------------
-
-  if (
-    input.includes("hospital") ||
-    input.includes("hospitals")
-  ) {
-
+  if (input.includes("hospital")) {
     return "hospital";
-
   }
 
-
-  // ---------------------------------------------------
-  // School
-  // ---------------------------------------------------
-
-  if (
-    input.includes("school") ||
-    input.includes("schools")
-  ) {
-
-    return "school";
-
+  // Clinic
+  if (input.includes("clinic")) {
+    return "clinic";
   }
 
-
-  // ---------------------------------------------------
-  // Education
-  // ---------------------------------------------------
-
-  if (
-    input.includes("education") ||
-    input.includes("educational")
-  ) {
-
-    return "education";
-
-  }
-
-
-  // ---------------------------------------------------
-  // Scholarship
-  // ---------------------------------------------------
-
-  if (
-    input.includes("scholarship") ||
-    input.includes("scholarships")
-  ) {
-
-    return "scholarship";
-
-  }
-
-
-  // ---------------------------------------------------
-  // College
-  // ---------------------------------------------------
-
-  if (
-    input.includes("college") ||
-    input.includes("colleges")
-  ) {
-
-    return "college";
-
-  }
-
-
-  // ---------------------------------------------------
-  // University
-  // ---------------------------------------------------
-
-  if (
-    input.includes("university") ||
-    input.includes("universities")
-  ) {
-
-    return "university";
-
-  }
-
-
-  // ---------------------------------------------------
   // Pharmacy
-  // ---------------------------------------------------
-
   if (
     input.includes("pharmacy") ||
     input.includes("pharmacies")
   ) {
-
     return "pharmacy";
-
   }
 
+  // School
+  if (input.includes("school")) {
+    return "school";
+  }
 
-  // ---------------------------------------------------
-  // Clinic
-  // ---------------------------------------------------
-
+  // Education
   if (
-    input.includes("clinic") ||
-    input.includes("clinics")
+    input.includes("education") ||
+    input.includes("educational")
   ) {
-
-    return "clinic";
-
+    return "education";
   }
 
+  // Scholarship
+  if (input.includes("scholarship")) {
+    return "scholarship";
+  }
 
-  // ---------------------------------------------------
+  // College
+  if (input.includes("college")) {
+    return "college";
+  }
+
+  // University
+  if (input.includes("university")) {
+    return "university";
+  }
+
   // Police
-  // ---------------------------------------------------
-
   if (input.includes("police")) {
-
     return "police";
-
   }
 
-
-  // ---------------------------------------------------
-  // Blood Bank
-  // ---------------------------------------------------
-
+  // Blood bank
   if (
     input.includes("blood bank") ||
     input.includes("bloodbank") ||
     input.includes("blood")
   ) {
-
     return "blood bank";
-
   }
 
-
-  // ---------------------------------------------------
   // Bank
-  // ---------------------------------------------------
-
   if (
     input.includes("bank") &&
     !input.includes("blood")
   ) {
-
     return "bank";
-
   }
 
-
-  // ---------------------------------------------------
   // Library
-  // ---------------------------------------------------
-
   if (input.includes("library")) {
-
     return "library";
-
   }
 
+  // ATM
+  if (input.includes("atm")) {
+    return "atm";
+  }
 
   return null;
-
 }
-
 
 // =====================================================
 // BUILD OVERPASS QUERY
@@ -420,9 +292,8 @@ function buildOverpassQuery(
     })
     .join("\n");
 
-
   return `
-    [out:json][timeout:60];
+    [out:json][timeout:20];
 
     (
       ${statements}
@@ -430,742 +301,716 @@ function buildOverpassQuery(
 
     out center tags;
   `;
-
 }
 
+// =====================================================
+// GET GEOCORDINATES
+// =====================================================
+
+async function getCoordinates(location) {
+
+  const url =
+    "https://nominatim.openstreetmap.org/search" +
+    "?q=" +
+    encodeURIComponent(location) +
+    "&format=json" +
+    "&limit=1";
+
+  const response = await fetch(
+    url,
+    {
+      headers: {
+        "User-Agent":
+          "Sahaay-Community-Service-Finder/1.0"
+      },
+
+      signal: AbortSignal.timeout(10000)
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Location service returned HTTP ${response.status}`
+    );
+  }
+
+  const data = await response.json();
+
+  if (
+    !Array.isArray(data) ||
+    data.length === 0
+  ) {
+    return null;
+  }
+
+  return {
+    latitude: parseFloat(data[0].lat),
+    longitude: parseFloat(data[0].lon)
+  };
+}
 
 // =====================================================
-// FIND NEARBY RESOURCES
+// SEARCH OVERPASS SERVERS
 // =====================================================
 
-app.post("/api/analyze", async (req, res) => {
+async function searchOverpass(
+  query
+) {
 
-  try {
+  const servers = [
 
-    console.log("");
-    console.log("=================================");
-    console.log("NEW SEARCH REQUEST");
-    console.log("Request body:", req.body);
-    console.log("=================================");
+    "https://overpass-api.de/api/interpreter",
 
+    "https://overpass.private.coffee/api/interpreter",
 
-    const {
-      problem,
-      location,
-      language
-    } = req.body;
+    "https://overpass.kumi.systems/api/interpreter"
 
+  ];
 
-    // =================================================
-    // VALIDATION
-    // =================================================
+  for (const server of servers) {
 
-    if (!problem || !location || !language) {
+    try {
 
-      return res.status(400).json({
+      console.log(
+        "Trying Overpass:",
+        server
+      );
 
-        status: "error",
-
-        message:
-          "Problem, location and language are required",
-
-        received: req.body
-
-      });
-
-    }
-
-
-    const searchLocation =
-      String(location).trim();
-
-
-    // =================================================
-    // DETERMINE SERVICE
-    // =================================================
-
-    const serviceType =
-      findServiceType(problem);
-
-
-    console.log(
-      "Requested service:",
-      problem
-    );
-
-
-    console.log(
-      "Detected service type:",
-      serviceType
-    );
-
-
-    if (!serviceType) {
-
-      return res.json({
-
-        status: "success",
-
-        type: "unknown",
-
-        location: searchLocation,
-
-        language,
-
-        count: 0,
-
-        results: [],
-
-        message:
-          `We could not identify "${problem}". Try hospital, school, education, scholarship, college, pharmacy or police.`
-
-      });
-
-    }
-
-
-    // =================================================
-    // GEOCODING
-    // =================================================
-
-    const geocodeUrl =
-      "https://nominatim.openstreetmap.org/search" +
-      "?q=" +
-      encodeURIComponent(searchLocation) +
-      "&format=json" +
-      "&limit=1";
-
-
-    console.log(
-      "Geocoding location:",
-      searchLocation
-    );
-
-
-    const geocodeResponse =
-      await fetch(
-        geocodeUrl,
+      const response = await fetch(
+        server,
         {
-          headers: {
+          method: "POST",
 
+          headers: {
+            "Content-Type": "text/plain",
             "User-Agent":
               "Sahaay-Community-Service-Finder/1.0"
+          },
 
-          }
+          body: query,
+
+          signal:
+            AbortSignal.timeout(12000)
         }
       );
 
-
-    if (!geocodeResponse.ok) {
-
-      throw new Error(
-        `Nominatim returned HTTP ${geocodeResponse.status}`
+      console.log(
+        "Overpass status:",
+        response.status
       );
 
-    }
-
-
-    const geocodeData =
-      await geocodeResponse.json();
-
-
-    console.log(
-      "Geocode result:",
-      geocodeData
-    );
-
-
-    if (
-      !geocodeData ||
-      geocodeData.length === 0
-    ) {
-
-      return res.status(404).json({
-
-        status: "error",
-
-        message:
-          `Location "${searchLocation}" could not be found.`
-
-      });
-
-    }
-
-
-    const latitude =
-      parseFloat(
-        geocodeData[0].lat
-      );
-
-
-    const longitude =
-      parseFloat(
-        geocodeData[0].lon
-      );
-
-
-    console.log(
-      "Coordinates:",
-      latitude,
-      longitude
-    );
-
-
-    // =================================================
-    // SEARCH RADIUS
-    // =================================================
-
-    const radius = 10000;
-
-
-    const tags =
-      serviceTypes[serviceType];
-
-
-    const overpassQuery =
-      buildOverpassQuery(
-        tags,
-        latitude,
-        longitude,
-        radius
-      );
-
-
-    console.log(
-      "Searching Overpass..."
-    );
-
-
-    // =================================================
-    // OVERPASS SERVERS
-    // =================================================
-
-    const overpassServers = [
-
-      "https://overpass.private.coffee/api/interpreter",
-
-      "https://overpass-api.de/api/interpreter",
-
-      "https://z.overpass-api.de/api/interpreter"
-
-    ];
-
-
-    let overpassData = null;
-
-
-    // =================================================
-    // TRY EACH OVERPASS SERVER
-    // =================================================
-
-    for (
-      const server of overpassServers
-    ) {
-
-      try {
-
-        console.log(
-          "Trying Overpass server:",
-          server
+      if (!response.ok) {
+        throw new Error(
+          `HTTP ${response.status}`
         );
-
-
-        const overpassResponse =
-          await fetch(
-            server,
-            {
-
-              method: "POST",
-
-              headers: {
-
-                "Content-Type":
-                  "text/plain",
-
-                "User-Agent":
-                  "Sahaay-Community-Service-Finder/1.0"
-
-              },
-
-              body:
-                overpassQuery,
-
-              signal:
-                AbortSignal.timeout(
-                  45000
-                )
-
-            }
-          );
-
-
-        console.log(
-          "Overpass HTTP status:",
-          overpassResponse.status
-        );
-
-
-        if (
-          !overpassResponse.ok
-        ) {
-
-          throw new Error(
-            `Overpass returned HTTP ${overpassResponse.status}`
-          );
-
-        }
-
-
-        overpassData =
-          await overpassResponse.json();
-
-
-        console.log(
-          "Overpass elements:",
-          overpassData.elements?.length || 0
-        );
-
-
-        // SUCCESS
-        break;
-
       }
 
-      catch (error) {
+      const data =
+        await response.json();
 
-        console.error(
-          "Overpass server failed:",
-          server
+      if (
+        data &&
+        Array.isArray(data.elements)
+      ) {
+
+        console.log(
+          "Overpass returned:",
+          data.elements.length,
+          "elements"
         );
 
-
-        console.error(
-          error.message
-        );
-
+        return data;
       }
 
     }
-
-
-    // =================================================
-    // ALL OVERPASS SERVERS FAILED
-    // =================================================
-
-    if (!overpassData) {
+    catch (error) {
 
       console.error(
-        "ALL OVERPASS SERVERS FAILED"
+        "Overpass failed:",
+        server
       );
 
-
-      return res.status(503).json({
-
-        status: "error",
-
-        message:
-          "The nearby resource service is temporarily unavailable. Please try again in a few seconds.",
-
-        results: []
-
-      });
+      console.error(
+        error.message
+      );
 
     }
+  }
+
+  return null;
+}
+
+// =====================================================
+// CREATE ADDRESS
+// =====================================================
+
+function createAddress(tags) {
+
+  const addressParts = [
+
+    tags["addr:housenumber"],
+    tags["addr:street"],
+    tags["addr:suburb"],
+    tags["addr:city"],
+    tags["addr:district"],
+    tags["addr:postcode"]
+
+  ].filter(Boolean);
+
+  return (
+    tags["addr:full"] ||
+    addressParts.join(", ") ||
+    tags["addr:place"] ||
+    tags["addr:street"] ||
+    "Address not available"
+  );
+}
 
+// =====================================================
+// CREATE RESOURCE
+// =====================================================
 
-    // =================================================
-    // CONVERT OSM RESULTS
-    // =================================================
+function createResource(
+  place,
+  serviceType,
+  searchLocation
+) {
 
-    const results =
-      (overpassData.elements || [])
-        .map((place) => {
+  const tags =
+    place.tags || {};
 
-          const tags =
-            place.tags || {};
+  const latitude =
+    place.lat ??
+    place.center?.lat ??
+    null;
 
+  const longitude =
+    place.lon ??
+    place.center?.lon ??
+    null;
 
-          // -------------------------------------------
-          // LATITUDE
-          // -------------------------------------------
+  const address =
+    createAddress(tags);
 
-          const placeLatitude =
-            place.lat ??
-            place.center?.lat ??
-            null;
+  const phone =
+    tags.phone ||
+    tags["contact:phone"] ||
+    tags["contact:mobile"] ||
+    tags["contact:telephone"] ||
+    "Phone number not available";
 
+  const website =
+    tags.website ||
+    tags["contact:website"] ||
+    "";
 
-          // -------------------------------------------
-          // LONGITUDE
-          // -------------------------------------------
+  const email =
+    tags.email ||
+    tags["contact:email"] ||
+    "";
 
-          const placeLongitude =
-            place.lon ??
-            place.center?.lon ??
-            null;
+  const openingHours =
+    tags.opening_hours ||
+    "Opening hours not available";
 
+  const name =
+    tags.name ||
+    `${serviceType
+      .charAt(0)
+      .toUpperCase()}${serviceType.slice(1)}`;
 
-          // -------------------------------------------
-          // ADDRESS
-          // -------------------------------------------
+  let mapUrl = "";
 
-          const addressParts = [
+  if (
+    latitude !== null &&
+    longitude !== null
+  ) {
 
-            tags["addr:housenumber"],
+    mapUrl =
+      "https://www.google.com/maps/search/?api=1&query=" +
+      `${latitude},${longitude}`;
 
-            tags["addr:street"],
+  }
+  else {
 
-            tags["addr:suburb"],
+    mapUrl =
+      "https://www.google.com/maps/search/?api=1&query=" +
+      encodeURIComponent(
+        `${name} ${searchLocation}`
+      );
 
-            tags["addr:city"],
+  }
 
-            tags["addr:district"],
+  return {
 
-            tags["addr:postcode"]
+    id:
+      `${place.type || "place"}-${place.id}`,
 
-          ].filter(Boolean);
+    title:
+      name,
 
+    name:
+      name,
 
-          const address =
-            tags["addr:full"] ||
+    category:
+      serviceType,
 
-            addressParts.join(", ") ||
+    type:
+      serviceType,
 
-            tags["addr:place"] ||
+    description:
+      `Nearby ${serviceType} resource located in ${searchLocation}.`,
 
-            tags["addr:street"] ||
+    location:
+      address,
 
-            "Address not available";
+    address:
+      address,
 
+    phone:
+      phone,
 
-          // -------------------------------------------
-          // PHONE
-          // -------------------------------------------
+    website:
+      website,
 
-          const phone =
-            tags.phone ||
+    email:
+      email,
 
-            tags["contact:phone"] ||
+    latitude:
+      latitude,
 
-            tags["contact:mobile"] ||
+    longitude:
+      longitude,
 
-            tags["contact:telephone"] ||
+    mapUrl:
+      mapUrl,
 
-            "Phone number not available";
+    availability:
+      openingHours,
 
+    openingHours:
+      openingHours,
 
-          // -------------------------------------------
-          // WEBSITE
-          // -------------------------------------------
+    emergency:
+      tags.emergency ||
+      "Not specified",
 
-          const website =
-            tags.website ||
+    cost:
+      "Contact provider",
 
-            tags["contact:website"] ||
+    source:
+      "OpenStreetMap",
 
-            "";
+    lastUpdated:
+      new Date().toLocaleDateString("en-IN")
 
+  };
+}
 
-          // -------------------------------------------
-          // EMAIL
-          // -------------------------------------------
+// =====================================================
+// REMOVE DUPLICATES
+// =====================================================
 
-          const email =
-            tags.email ||
+function removeDuplicates(results) {
 
-            tags["contact:email"] ||
+  const seen = new Set();
 
-            "";
+  return results.filter(
+    (resource) => {
 
-
-          // -------------------------------------------
-          // OPENING HOURS
-          // -------------------------------------------
-
-          const openingHours =
-            tags.opening_hours ||
-
-            "Opening hours not available";
-
-
-          // -------------------------------------------
-          // MAP URL
-          // -------------------------------------------
-
-          let mapUrl = "";
-
-
-          if (
-            placeLatitude !== null &&
-            placeLongitude !== null
-          ) {
-
-            mapUrl =
-              "https://www.google.com/maps/search/?api=1&query=" +
-              `${placeLatitude},${placeLongitude}`;
-
-          }
-
-          else {
-
-            mapUrl =
-              "https://www.google.com/maps/search/?api=1&query=" +
-              encodeURIComponent(
-                `${tags.name || serviceType} ${searchLocation}`
-              );
-
-          }
-
-
-          // -------------------------------------------
-          // RESOURCE NAME
-          // -------------------------------------------
-
-          const resourceName =
-            tags.name ||
-            `${serviceType
-              .charAt(0)
-              .toUpperCase() +
-              serviceType.slice(1)}`;
-
-
-          // -------------------------------------------
-          // RESOURCE OBJECT
-          // -------------------------------------------
-
-          return {
-
-            id:
-              `${place.type || "place"}-${place.id}`,
-
-            title:
-              resourceName,
-
-            name:
-              resourceName,
-
-            category:
-              serviceType,
-
-            type:
-              serviceType,
-
-            description:
-              `Nearby ${serviceType} resource located in ${searchLocation}.`,
-
-            location:
-              address,
-
-            address:
-              address,
-
-            phone:
-              phone,
-
-            website:
-              website,
-
-            email:
-              email,
-
-            latitude:
-              placeLatitude,
-
-            longitude:
-              placeLongitude,
-
-            mapUrl:
-              mapUrl,
-
-            availability:
-              openingHours,
-
-            openingHours:
-              openingHours,
-
-            emergency:
-              tags.emergency ||
-              "Not specified",
-
-            cost:
-              "Contact provider",
-
-            source:
-              "OpenStreetMap",
-
-            lastUpdated:
-              new Date()
-                .toLocaleDateString("en-IN")
-
-          };
-
-        });
-
-
-    // =================================================
-    // REMOVE DUPLICATES
-    // =================================================
-
-    const uniqueResults = [];
-
-    const seenNames =
-      new Set();
-
-
-    for (
-      const place of results
-    ) {
-
-      const name =
-        place.name
+      const key =
+        resource.name
           .toLowerCase()
           .trim();
 
+      if (seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+
+      return true;
+    }
+  );
+}
+
+// =====================================================
+// ANALYZE / FIND RESOURCES
+// =====================================================
+
+app.post(
+  "/api/analyze",
+  async (req, res) => {
+
+    try {
+
+      console.log("");
+      console.log(
+        "================================="
+      );
+
+      console.log(
+        "NEW SEARCH REQUEST"
+      );
+
+      console.log(
+        "Request body:",
+        req.body
+      );
+
+      console.log(
+        "================================="
+      );
+
+      const {
+        problem,
+        location,
+        language
+      } = req.body;
+
+      // =================================================
+      // VALIDATION
+      // =================================================
 
       if (
-        !seenNames.has(name)
+        !problem ||
+        !location ||
+        !language
       ) {
 
-        seenNames.add(name);
+        return res.status(400).json({
 
-        uniqueResults.push(place);
+          status: "error",
+
+          message:
+            "Problem, location and language are required",
+
+          received:
+            req.body
+
+        });
 
       }
 
-    }
+      const searchLocation =
+        String(location).trim();
 
+      // =================================================
+      // DETERMINE SERVICE
+      // =================================================
 
-    // =================================================
-    // LIMIT RESULTS
-    // =================================================
+      const serviceType =
+        findServiceType(problem);
 
-    const finalResults =
-      uniqueResults.slice(
-        0,
-        50
+      console.log(
+        "Requested service:",
+        problem
       );
 
+      console.log(
+        "Detected service:",
+        serviceType
+      );
 
-    console.log(
-      "Final results:",
-      finalResults.length
-    );
+      if (!serviceType) {
 
+        return res.json({
 
-    // =================================================
-    // NO RESULTS
-    // =================================================
+          status: "success",
 
-    if (
-      finalResults.length === 0
-    ) {
+          type: "unknown",
+
+          location:
+            searchLocation,
+
+          language:
+            language,
+
+          count: 0,
+
+          results: [],
+
+          message:
+            `We could not identify "${problem}". Try hospital, school, education, scholarship, college, pharmacy, clinic, police, bank or library.`
+
+        });
+
+      }
+
+      // =================================================
+      // GEOCODING
+      // =================================================
+
+      console.log(
+        "Geocoding:",
+        searchLocation
+      );
+
+      const coordinates =
+        await getCoordinates(
+          searchLocation
+        );
+
+      if (!coordinates) {
+
+        return res.status(404).json({
+
+          status: "error",
+
+          message:
+            `Location "${searchLocation}" could not be found.`,
+
+          results: []
+
+        });
+
+      }
+
+      const {
+        latitude,
+        longitude
+      } = coordinates;
+
+      console.log(
+        "Coordinates:",
+        latitude,
+        longitude
+      );
+
+      // =================================================
+      // SEARCH RADIUS
+      // =================================================
+
+      const radius = 10000;
+
+      const tags =
+        serviceTypes[serviceType];
+
+      const query =
+        buildOverpassQuery(
+          tags,
+          latitude,
+          longitude,
+          radius
+        );
+
+      console.log(
+        "Searching nearby resources..."
+      );
+
+      // =================================================
+      // OVERPASS SEARCH
+      // =================================================
+
+      const overpassData =
+        await searchOverpass(
+          query
+        );
+
+      if (!overpassData) {
+
+        console.error(
+          "All Overpass servers failed."
+        );
+
+        return res.status(503).json({
+
+          status: "error",
+
+          type:
+            serviceType,
+
+          location:
+            searchLocation,
+
+          language:
+            language,
+
+          count: 0,
+
+          results: [],
+
+          message:
+            "The resource service is temporarily unavailable. Please try again."
+
+        });
+
+      }
+
+      // =================================================
+      // CONVERT RESULTS
+      // =================================================
+
+      const results =
+        (
+          overpassData.elements || []
+        )
+        .map(
+          (place) =>
+            createResource(
+              place,
+              serviceType,
+              searchLocation
+            )
+        )
+        .filter(
+          (resource) =>
+            resource.name &&
+            resource.name.trim()
+        );
+
+      console.log(
+        "Resources received:",
+        results.length
+      );
+
+      // =================================================
+      // REMOVE DUPLICATES
+      // =================================================
+
+      const uniqueResults =
+        removeDuplicates(
+          results
+        );
+
+      console.log(
+        "Unique resources:",
+        uniqueResults.length
+      );
+
+      // =================================================
+      // LIMIT
+      // =================================================
+
+      const finalResults =
+        uniqueResults.slice(
+          0,
+          50
+        );
+
+      console.log(
+        "Final resources:",
+        finalResults.length
+      );
+
+      // =================================================
+      // NO RESULTS
+      // =================================================
+
+      if (
+        finalResults.length === 0
+      ) {
+
+        return res.json({
+
+          status: "success",
+
+          type:
+            serviceType,
+
+          location:
+            searchLocation,
+
+          language:
+            language,
+
+          count: 0,
+
+          results: [],
+
+          message:
+            `No nearby ${serviceType} resources were found within 10 km of ${searchLocation}.`
+
+        });
+
+      }
+
+      // =================================================
+      // SUCCESS
+      // =================================================
 
       return res.json({
 
         status: "success",
 
-        type: serviceType,
+        type:
+          serviceType,
 
-        location: searchLocation,
+        location:
+          searchLocation,
 
-        language,
+        language:
+          language,
 
-        count: 0,
+        count:
+          finalResults.length,
 
-        results: [],
+        results:
+          finalResults,
 
         message:
-          `No nearby ${serviceType} resources were found within 10 km of ${searchLocation}.`
+          `Found ${finalResults.length} nearby ${serviceType} resources near ${searchLocation}.`
 
       });
 
     }
 
+    catch (error) {
 
-    // =================================================
-    // SUCCESS
-    // =================================================
+      console.error("");
+      console.error(
+        "================================="
+      );
 
-    return res.json({
+      console.error(
+        "SAHAAY API ERROR"
+      );
 
-      status: "success",
+      console.error(
+        error
+      );
 
-      type: serviceType,
+      console.error(
+        "================================="
+      );
 
-      location: searchLocation,
+      return res.status(500).json({
 
-      language,
+        status: "error",
 
-      count:
-        finalResults.length,
+        message:
+          "Unable to find nearby services right now.",
 
-      results:
-        finalResults,
+        results: [],
 
-      message:
-        `Found ${finalResults.length} nearby ${serviceType} resources near ${searchLocation}.`
+        error:
+          error.message
 
-    });
+      });
 
-
-  }
-
-  catch (error) {
-
-    console.error(
-      "================================="
-    );
-
-
-    console.error(
-      "SAHAAY API ERROR:"
-    );
-
-
-    console.error(
-      error
-    );
-
-
-    console.error(
-      "================================="
-    );
-
-
-    return res.status(500).json({
-
-      status: "error",
-
-      message:
-        "Unable to find nearby services right now.",
-
-      error:
-        error.message
-
-    });
+    }
 
   }
-
-});
-
+);
 
 // =====================================================
 // 404
 // =====================================================
 
-app.use((req, res) => {
+app.use(
+  (req, res) => {
 
-  res.status(404).json({
+    res.status(404).json({
 
-    status: "error",
+      status: "error",
 
-    message:
-      "API endpoint not found"
+      message:
+        "API endpoint not found"
 
-  });
+    });
 
-});
-
+  }
+);
 
 // =====================================================
 // START SERVER
@@ -1174,13 +1019,25 @@ app.use((req, res) => {
 const PORT =
   process.env.PORT || 5001;
 
-
 app.listen(
   PORT,
   () => {
 
+    console.log("");
+    console.log(
+      "================================="
+    );
+
     console.log(
       `Sahaay server running on port ${PORT}`
+    );
+
+    console.log(
+      `http://localhost:${PORT}`
+    );
+
+    console.log(
+      "================================="
     );
 
   }
