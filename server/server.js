@@ -3,7 +3,13 @@ const cors = require("cors");
 
 const app = express();
 
+
+// =====================================================
+// MIDDLEWARE
+// =====================================================
+
 app.use(cors());
+
 app.use(express.json());
 
 
@@ -12,10 +18,12 @@ app.use(express.json());
 // =====================================================
 
 app.get("/", (req, res) => {
+
   res.json({
     status: "success",
     message: "Sahaay API is running"
   });
+
 });
 
 
@@ -24,10 +32,12 @@ app.get("/", (req, res) => {
 // =====================================================
 
 app.get("/api/health", (req, res) => {
+
   res.json({
     status: "success",
     message: "Sahaay server is healthy"
   });
+
 });
 
 
@@ -37,7 +47,9 @@ app.get("/api/health", (req, res) => {
 
 const serviceTypes = {
 
-  // ---------------- HEALTHCARE ----------------
+  // ===================================================
+  // HEALTHCARE
+  // ===================================================
 
   hospital: [
     '["amenity"="hospital"]',
@@ -70,7 +82,9 @@ const serviceTypes = {
   ],
 
 
-  // ---------------- EDUCATION ----------------
+  // ===================================================
+  // EDUCATION
+  // ===================================================
 
   school: [
     '["amenity"="school"]'
@@ -103,34 +117,38 @@ const serviceTypes = {
   ],
 
 
-  // ---------------- SCHOLARSHIPS ----------------
+  // ===================================================
+  // SCHOLARSHIPS
+  // ===================================================
 
   scholarship: [
+    '["office"="educational_institution"]',
     '["amenity"="college"]',
-    '["amenity"="university"]',
-    '["office"="educational_institution"]'
+    '["amenity"="university"]'
   ],
 
   scholarships: [
+    '["office"="educational_institution"]',
     '["amenity"="college"]',
-    '["amenity"="university"]',
-    '["office"="educational_institution"]'
+    '["amenity"="university"]'
   ],
 
   "scholarship centre": [
+    '["office"="educational_institution"]',
     '["amenity"="college"]',
-    '["amenity"="university"]',
-    '["office"="educational_institution"]'
+    '["amenity"="university"]'
   ],
 
   "scholarship center": [
+    '["office"="educational_institution"]',
     '["amenity"="college"]',
-    '["amenity"="university"]',
-    '["office"="educational_institution"]'
+    '["amenity"="university"]'
   ],
 
 
-  // ---------------- OTHER SERVICES ----------------
+  // ===================================================
+  // POLICE
+  // ===================================================
 
   police: [
     '["amenity"="police"]'
@@ -140,6 +158,11 @@ const serviceTypes = {
     '["amenity"="police"]'
   ],
 
+
+  // ===================================================
+  // BANK
+  // ===================================================
+
   bank: [
     '["amenity"="bank"]'
   ],
@@ -148,9 +171,19 @@ const serviceTypes = {
     '["amenity"="bank"]'
   ],
 
+
+  // ===================================================
+  // ATM
+  // ===================================================
+
   atm: [
     '["amenity"="atm"]'
   ],
+
+
+  // ===================================================
+  // LIBRARY
+  // ===================================================
 
   library: [
     '["amenity"="library"]'
@@ -160,6 +193,11 @@ const serviceTypes = {
     '["amenity"="library"]'
   ],
 
+
+  // ===================================================
+  // BLOOD BANK
+  // ===================================================
+
   "blood bank": [
     '["amenity"="blood_bank"]'
   ],
@@ -167,6 +205,7 @@ const serviceTypes = {
   bloodbank: [
     '["amenity"="blood_bank"]'
   ]
+
 };
 
 
@@ -180,96 +219,181 @@ function findServiceType(problem) {
     .toLowerCase()
     .trim();
 
+
+  // ---------------------------------------------------
   // Exact match
+  // ---------------------------------------------------
 
   if (serviceTypes[input]) {
     return input;
   }
 
-  // Common words
+
+  // ---------------------------------------------------
+  // Hospital
+  // ---------------------------------------------------
 
   if (
     input.includes("hospital") ||
     input.includes("hospitals")
   ) {
+
     return "hospital";
+
   }
+
+
+  // ---------------------------------------------------
+  // School
+  // ---------------------------------------------------
 
   if (
     input.includes("school") ||
     input.includes("schools")
   ) {
+
     return "school";
+
   }
+
+
+  // ---------------------------------------------------
+  // Education
+  // ---------------------------------------------------
 
   if (
     input.includes("education") ||
     input.includes("educational")
   ) {
+
     return "education";
+
   }
+
+
+  // ---------------------------------------------------
+  // Scholarship
+  // ---------------------------------------------------
 
   if (
     input.includes("scholarship") ||
     input.includes("scholarships")
   ) {
+
     return "scholarship";
+
   }
+
+
+  // ---------------------------------------------------
+  // College
+  // ---------------------------------------------------
 
   if (
     input.includes("college") ||
     input.includes("colleges")
   ) {
+
     return "college";
+
   }
+
+
+  // ---------------------------------------------------
+  // University
+  // ---------------------------------------------------
 
   if (
     input.includes("university") ||
     input.includes("universities")
   ) {
+
     return "university";
+
   }
+
+
+  // ---------------------------------------------------
+  // Pharmacy
+  // ---------------------------------------------------
 
   if (
     input.includes("pharmacy") ||
     input.includes("pharmacies")
   ) {
+
     return "pharmacy";
+
   }
+
+
+  // ---------------------------------------------------
+  // Clinic
+  // ---------------------------------------------------
 
   if (
     input.includes("clinic") ||
     input.includes("clinics")
   ) {
+
     return "clinic";
+
   }
 
-  if (
-    input.includes("police")
-  ) {
+
+  // ---------------------------------------------------
+  // Police
+  // ---------------------------------------------------
+
+  if (input.includes("police")) {
+
     return "police";
+
   }
+
+
+  // ---------------------------------------------------
+  // Blood Bank
+  // ---------------------------------------------------
+
+  if (
+    input.includes("blood bank") ||
+    input.includes("bloodbank") ||
+    input.includes("blood")
+  ) {
+
+    return "blood bank";
+
+  }
+
+
+  // ---------------------------------------------------
+  // Bank
+  // ---------------------------------------------------
 
   if (
     input.includes("bank") &&
     !input.includes("blood")
   ) {
+
     return "bank";
+
   }
 
-  if (
-    input.includes("blood")
-  ) {
-    return "blood bank";
-  }
 
-  if (
-    input.includes("library")
-  ) {
+  // ---------------------------------------------------
+  // Library
+  // ---------------------------------------------------
+
+  if (input.includes("library")) {
+
     return "library";
+
   }
+
 
   return null;
+
 }
 
 
@@ -296,6 +420,7 @@ function buildOverpassQuery(
     })
     .join("\n");
 
+
   return `
     [out:json][timeout:60];
 
@@ -305,17 +430,19 @@ function buildOverpassQuery(
 
     out center tags;
   `;
+
 }
 
 
 // =====================================================
-// ANALYZE / FIND NEARBY RESOURCES
+// FIND NEARBY RESOURCES
 // =====================================================
 
 app.post("/api/analyze", async (req, res) => {
 
   try {
 
+    console.log("");
     console.log("=================================");
     console.log("NEW SEARCH REQUEST");
     console.log("Request body:", req.body);
@@ -365,6 +492,7 @@ app.post("/api/analyze", async (req, res) => {
       "Requested service:",
       problem
     );
+
 
     console.log(
       "Detected service type:",
@@ -419,8 +547,10 @@ app.post("/api/analyze", async (req, res) => {
         geocodeUrl,
         {
           headers: {
+
             "User-Agent":
               "Sahaay-Community-Service-Finder/1.0"
+
           }
         }
       );
@@ -507,49 +637,144 @@ app.post("/api/analyze", async (req, res) => {
 
 
     // =================================================
-    // OVERPASS
+    // OVERPASS SERVERS
     // =================================================
 
-    const overpassResponse =
-      await fetch(
-        "https://overpass-api.de/api/interpreter",
-        {
-          method: "POST",
+    const overpassServers = [
 
-          headers: {
-            "Content-Type":
-              "text/plain",
+      "https://overpass.private.coffee/api/interpreter",
 
-            "User-Agent":
-              "Sahaay-Community-Service-Finder/1.0"
-          },
+      "https://overpass-api.de/api/interpreter",
 
-          body: overpassQuery
+      "https://z.overpass-api.de/api/interpreter"
+
+    ];
+
+
+    let overpassData = null;
+
+
+    // =================================================
+    // TRY EACH OVERPASS SERVER
+    // =================================================
+
+    for (
+      const server of overpassServers
+    ) {
+
+      try {
+
+        console.log(
+          "Trying Overpass server:",
+          server
+        );
+
+
+        const overpassResponse =
+          await fetch(
+            server,
+            {
+
+              method: "POST",
+
+              headers: {
+
+                "Content-Type":
+                  "text/plain",
+
+                "User-Agent":
+                  "Sahaay-Community-Service-Finder/1.0"
+
+              },
+
+              body:
+                overpassQuery,
+
+              signal:
+                AbortSignal.timeout(
+                  45000
+                )
+
+            }
+          );
+
+
+        console.log(
+          "Overpass HTTP status:",
+          overpassResponse.status
+        );
+
+
+        if (
+          !overpassResponse.ok
+        ) {
+
+          throw new Error(
+            `Overpass returned HTTP ${overpassResponse.status}`
+          );
+
         }
-      );
 
 
-    if (!overpassResponse.ok) {
+        overpassData =
+          await overpassResponse.json();
 
-      throw new Error(
-        `Overpass returned HTTP ${overpassResponse.status}`
-      );
+
+        console.log(
+          "Overpass elements:",
+          overpassData.elements?.length || 0
+        );
+
+
+        // SUCCESS
+        break;
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Overpass server failed:",
+          server
+        );
+
+
+        console.error(
+          error.message
+        );
+
+      }
 
     }
 
 
-    const overpassData =
-      await overpassResponse.json();
+    // =================================================
+    // ALL OVERPASS SERVERS FAILED
+    // =================================================
+
+    if (!overpassData) {
+
+      console.error(
+        "ALL OVERPASS SERVERS FAILED"
+      );
 
 
-    console.log(
-      "Overpass elements:",
-      overpassData.elements?.length || 0
-    );
+      return res.status(503).json({
+
+        status: "error",
+
+        message:
+          "The nearby resource service is temporarily unavailable. Please try again in a few seconds.",
+
+        results: []
+
+      });
+
+    }
 
 
     // =================================================
-    // CONVERT RESULTS
+    // CONVERT OSM RESULTS
     // =================================================
 
     const results =
@@ -560,11 +785,19 @@ app.post("/api/analyze", async (req, res) => {
             place.tags || {};
 
 
+          // -------------------------------------------
+          // LATITUDE
+          // -------------------------------------------
+
           const placeLatitude =
             place.lat ??
             place.center?.lat ??
             null;
 
+
+          // -------------------------------------------
+          // LONGITUDE
+          // -------------------------------------------
 
           const placeLongitude =
             place.lon ??
@@ -595,8 +828,13 @@ app.post("/api/analyze", async (req, res) => {
 
           const address =
             tags["addr:full"] ||
+
             addressParts.join(", ") ||
+
             tags["addr:place"] ||
+
+            tags["addr:street"] ||
+
             "Address not available";
 
 
@@ -606,8 +844,13 @@ app.post("/api/analyze", async (req, res) => {
 
           const phone =
             tags.phone ||
+
             tags["contact:phone"] ||
+
             tags["contact:mobile"] ||
+
+            tags["contact:telephone"] ||
+
             "Phone number not available";
 
 
@@ -617,12 +860,36 @@ app.post("/api/analyze", async (req, res) => {
 
           const website =
             tags.website ||
+
             tags["contact:website"] ||
+
             "";
 
 
           // -------------------------------------------
-          // MAP
+          // EMAIL
+          // -------------------------------------------
+
+          const email =
+            tags.email ||
+
+            tags["contact:email"] ||
+
+            "";
+
+
+          // -------------------------------------------
+          // OPENING HOURS
+          // -------------------------------------------
+
+          const openingHours =
+            tags.opening_hours ||
+
+            "Opening hours not available";
+
+
+          // -------------------------------------------
+          // MAP URL
           // -------------------------------------------
 
           let mapUrl = "";
@@ -637,7 +904,9 @@ app.post("/api/analyze", async (req, res) => {
               "https://www.google.com/maps/search/?api=1&query=" +
               `${placeLatitude},${placeLongitude}`;
 
-          } else {
+          }
+
+          else {
 
             mapUrl =
               "https://www.google.com/maps/search/?api=1&query=" +
@@ -649,92 +918,84 @@ app.post("/api/analyze", async (req, res) => {
 
 
           // -------------------------------------------
+          // RESOURCE NAME
+          // -------------------------------------------
+
+          const resourceName =
+            tags.name ||
+            `${serviceType
+              .charAt(0)
+              .toUpperCase() +
+              serviceType.slice(1)}`;
+
+
+          // -------------------------------------------
           // RESOURCE OBJECT
           // -------------------------------------------
 
           return {
 
             id:
-              String(
-                place.type || "place"
-              ) +
-              "-" +
-              String(place.id),
-
+              `${place.type || "place"}-${place.id}`,
 
             title:
-              tags.name ||
-              `${serviceType
-                .charAt(0)
-                .toUpperCase() +
-                serviceType.slice(1)}`,
-
+              resourceName,
 
             name:
-              tags.name ||
-              `${serviceType
-                .charAt(0)
-                .toUpperCase() +
-                serviceType.slice(1)}`,
-
+              resourceName,
 
             category:
               serviceType,
 
+            type:
+              serviceType,
 
             description:
               `Nearby ${serviceType} resource located in ${searchLocation}.`,
 
-
             location:
               address,
-
 
             address:
               address,
 
-
             phone:
               phone,
-
 
             website:
               website,
 
+            email:
+              email,
 
             latitude:
               placeLatitude,
 
-
             longitude:
               placeLongitude,
-
 
             mapUrl:
               mapUrl,
 
-
             availability:
-              tags.opening_hours ||
-              "Opening hours not available",
-
+              openingHours,
 
             openingHours:
-              tags.opening_hours ||
-              "Opening hours not available",
-
+              openingHours,
 
             emergency:
               tags.emergency ||
               "Not specified",
 
-
             cost:
               "Contact provider",
 
-
             source:
-              "OpenStreetMap"
+              "OpenStreetMap",
+
+            lastUpdated:
+              new Date()
+                .toLocaleDateString("en-IN")
 
           };
 
@@ -747,7 +1008,8 @@ app.post("/api/analyze", async (req, res) => {
 
     const uniqueResults = [];
 
-    const seenNames = new Set();
+    const seenNames =
+      new Set();
 
 
     for (
@@ -774,11 +1036,14 @@ app.post("/api/analyze", async (req, res) => {
 
 
     // =================================================
-    // LIMIT
+    // LIMIT RESULTS
     // =================================================
 
     const finalResults =
-      uniqueResults.slice(0, 20);
+      uniqueResults.slice(
+        0,
+        50
+      );
 
 
     console.log(
@@ -843,19 +1108,24 @@ app.post("/api/analyze", async (req, res) => {
     });
 
 
-  } catch (error) {
+  }
+
+  catch (error) {
 
     console.error(
       "================================="
     );
 
+
     console.error(
       "SAHAAY API ERROR:"
     );
 
+
     console.error(
       error
     );
+
 
     console.error(
       "================================="
