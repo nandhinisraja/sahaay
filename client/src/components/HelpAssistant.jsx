@@ -1,48 +1,392 @@
 import { useState } from "react";
 
 import {
-  Search,
   MapPin,
-  Loader2,
+  Search,
   Mic,
-  MicOff
+  MicOff,
+  Volume2,
+  VolumeX,
+  Loader2,
+  AlertCircle,
+  CheckCircle2,
+  Phone,
+  Navigation,
+  Clock
 } from "lucide-react";
 
 import ResourceCard from "./ResourceCard";
 
 import "./HelpAssistant.css";
 
+// ============================================================
+// BACKEND API
+// ============================================================
 
-function HelpAssistant({ language = "English" }) {
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  "https://sahaay-5bo0.onrender.com";
 
-  // =====================================================
-  // STATES
-  // =====================================================
+// ============================================================
+// HELP ASSISTANT
+// ============================================================
 
-  const [problem, setProblem] = useState("");
+function HelpAssistant() {
 
-  const [location, setLocation] = useState("");
+  // ==========================================================
+  // FORM
+  // ==========================================================
 
-  const [results, setResults] = useState([]);
+  const [location, setLocation] =
+    useState("Kanchipuram");
 
-  const [category, setCategory] = useState("");
+  const [problem, setProblem] =
+    useState("Hospitals");
 
-  const [resourceType, setResourceType] = useState("");
+  const [language, setLanguage] =
+    useState("English");
 
-  const [priority, setPriority] = useState("");
+  // ==========================================================
+  // RESULTS
+  // ==========================================================
 
-  const [loading, setLoading] = useState(false);
+  const [resources, setResources] =
+    useState([]);
 
-  const [searched, setSearched] = useState(false);
+  // ==========================================================
+  // UI STATES
+  // ==========================================================
 
-  const [listening, setListening] = useState(false);
+  const [loading, setLoading] =
+    useState(false);
 
+  const [error, setError] =
+    useState("");
 
-  // =====================================================
-  // VOICE INPUT
-  // =====================================================
+  const [searched, setSearched] =
+    useState(false);
 
-  const startVoiceInput = () => {
+  const [listening, setListening] =
+    useState(false);
+
+  const [speaking, setSpeaking] =
+    useState(false);
+
+  const [saved, setSaved] =
+    useState([]);
+
+  // ==========================================================
+  // CATEGORY OPTIONS
+  // ==========================================================
+
+  const categories = [
+    {
+      value: "Hospitals",
+      label: "Hospitals"
+    },
+    {
+      value: "Schools",
+      label: "Schools"
+    },
+    {
+      value: "Education",
+      label: "Education"
+    },
+    {
+      value: "Scholarships",
+      label: "Scholarships"
+    }
+  ];
+
+  // ==========================================================
+  // DESCRIPTION
+  // ==========================================================
+
+  const getDescription = (type) => {
+
+    const value =
+      String(type || "").toLowerCase();
+
+    if (value.includes("hospital")) {
+
+      return (
+        "Healthcare facility providing medical " +
+        "consultation, treatment and patient support."
+      );
+    }
+
+    if (value.includes("school")) {
+
+      return (
+        "Educational institution providing " +
+        "schooling and learning opportunities."
+      );
+    }
+
+    if (value.includes("scholarship")) {
+
+      return (
+        "Educational support resource providing " +
+        "information about scholarships and financial assistance."
+      );
+    }
+
+    if (value.includes("education")) {
+
+      return (
+        "Educational resource providing " +
+        "learning, guidance and student support."
+      );
+    }
+
+    return (
+      "Nearby community support resource " +
+      "available through SAHAAY."
+    );
+  };
+
+  // ==========================================================
+  // FIND HELP
+  // ==========================================================
+
+  const findHelp = async () => {
+
+    setError("");
+    setResources([]);
+    setLoading(true);
+    setSearched(true);
+
+    try {
+
+      // ------------------------------------------------------
+      // CHECK LOCATION
+      // ------------------------------------------------------
+
+      if (!location.trim()) {
+
+        throw new Error(
+          "Please enter your location."
+        );
+      }
+
+      // ------------------------------------------------------
+      // CHECK API URL
+      // ------------------------------------------------------
+
+      console.log(
+        "SAHAAY API:",
+        API_URL
+      );
+
+      // ------------------------------------------------------
+      // SEND REQUEST
+      // ------------------------------------------------------
+
+      const response = await fetch(
+        `${API_URL}/api/analyze`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body: JSON.stringify({
+            problem:
+              problem.toLowerCase(),
+
+            location:
+              location.trim(),
+
+            language:
+              language
+          })
+        }
+      );
+
+      // ------------------------------------------------------
+      // READ RESPONSE
+      // ------------------------------------------------------
+
+      const data =
+        await response.json();
+
+      console.log(
+        "SAHAAY API RESPONSE:",
+        data
+      );
+
+      // ------------------------------------------------------
+      // BACKEND ERROR
+      // ------------------------------------------------------
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.message ||
+          `Backend returned ${response.status}`
+        );
+      }
+
+      if (
+        data.status === "error"
+      ) {
+
+        throw new Error(
+          data.message ||
+          "Unable to find nearby resources."
+        );
+      }
+
+      // ------------------------------------------------------
+      // GET ACTUAL RESULTS
+      // ------------------------------------------------------
+
+      const results =
+        Array.isArray(data.results)
+          ? data.results
+          : [];
+
+      // ------------------------------------------------------
+      // CONVERT API DATA
+      // INTO RESOURCE CARD DATA
+      // ------------------------------------------------------
+
+      const formattedResources =
+        results.map(
+          (item, index) => {
+
+            return {
+
+              id:
+                item.id ??
+                `${data.type}-${index}`,
+
+              title:
+                item.name ||
+                "Resource",
+
+              name:
+                item.name ||
+                "Resource",
+
+              type:
+                data.type ||
+                "Resource",
+
+              category:
+                data.type ||
+                "Resource",
+
+              description:
+                getDescription(
+                  data.type
+                ),
+
+              location:
+                item.address ||
+                data.location ||
+                "Address not available",
+
+              phone:
+                item.phone &&
+                item.phone !==
+                  "Phone number not available"
+                  ? item.phone
+                  : "",
+
+              availability:
+                item.openingHours ||
+                "Opening hours not available",
+
+              cost:
+                "Contact provider",
+
+              source:
+                "OpenStreetMap",
+
+              website:
+                item.website || "",
+
+              latitude:
+                item.latitude,
+
+              longitude:
+                item.longitude,
+
+              mapUrl:
+                item.mapUrl || "",
+
+              emergency:
+                item.emergency ||
+                "Not specified",
+
+              lastUpdated:
+                new Date()
+                  .toLocaleDateString()
+            };
+          }
+        );
+
+      // ------------------------------------------------------
+      // SAVE RESULTS
+      // ------------------------------------------------------
+
+      setResources(
+        formattedResources
+      );
+
+    } catch (err) {
+
+      console.error(
+        "SAHAAY FRONTEND ERROR:",
+        err
+      );
+
+      setError(
+        err.message ||
+        "Unable to find nearby services right now."
+      );
+
+    } finally {
+
+      setLoading(false);
+    }
+  };
+
+  // ==========================================================
+  // SAVE RESOURCE
+  // ==========================================================
+
+  const toggleSave = (id) => {
+
+    setSaved(
+      (previous) => {
+
+        if (
+          previous.includes(id)
+        ) {
+
+          return previous.filter(
+            (savedId) =>
+              savedId !== id
+          );
+        }
+
+        return [
+          ...previous,
+          id
+        ];
+      }
+    );
+  };
+
+  // ==========================================================
+  // VOICE SEARCH
+  // ==========================================================
+
+  const startVoiceSearch = () => {
 
     const SpeechRecognition =
       window.SpeechRecognition ||
@@ -51,488 +395,707 @@ function HelpAssistant({ language = "English" }) {
     if (!SpeechRecognition) {
 
       alert(
-        "Voice input is not supported in this browser. Please use Google Chrome."
+        "Voice search is not supported in this browser. Please use Google Chrome."
       );
 
       return;
     }
 
-    const recognition = new SpeechRecognition();
+    // Stop if already listening
+    if (listening) {
+      return;
+    }
+
+    const recognition =
+      new SpeechRecognition();
 
     recognition.continuous = false;
-
     recognition.interimResults = false;
 
-    // Set language based on selected language
+    // --------------------------------------------------------
+    // LANGUAGE
+    // --------------------------------------------------------
 
     if (language === "Hindi") {
 
       recognition.lang = "hi-IN";
 
-    } else if (language === "Urdu") {
+    } else if (
+      language === "Urdu"
+    ) {
 
-      recognition.lang = "ur-PK";
+      recognition.lang = "ur-IN";
 
     } else {
 
       recognition.lang = "en-IN";
-
     }
 
+    // --------------------------------------------------------
+    // START
+    // --------------------------------------------------------
 
     recognition.onstart = () => {
 
-      setListening(true);
+      console.log(
+        "Voice recognition started"
+      );
 
+      setListening(true);
     };
 
+    // --------------------------------------------------------
+    // RESULT
+    // --------------------------------------------------------
 
-    recognition.onresult = (event) => {
+    recognition.onresult = (
+      event
+    ) => {
 
-      const transcript =
-        event.results[0][0].transcript;
+      const spokenText =
+        event.results[0][0]
+          .transcript;
 
-      setProblem(transcript);
+      console.log(
+        "Voice input:",
+        spokenText
+      );
+
+      setLocation(
+        spokenText
+      );
 
       setListening(false);
-
     };
 
+    // --------------------------------------------------------
+    // ERROR
+    // --------------------------------------------------------
 
-    recognition.onerror = (event) => {
+    recognition.onerror = (
+      event
+    ) => {
 
       console.error(
-        "Speech recognition error:",
+        "Voice recognition error:",
         event.error
       );
 
       setListening(false);
 
-      alert(
-        "Unable to hear your voice. Please try again."
-      );
+      if (
+        event.error !==
+        "no-speech"
+      ) {
 
+        alert(
+          "Unable to hear your voice. Please try again."
+        );
+      }
     };
 
+    // --------------------------------------------------------
+    // END
+    // --------------------------------------------------------
 
     recognition.onend = () => {
 
-      setListening(false);
-
-    };
-
-
-    recognition.start();
-
-  };
-
-
-  // =====================================================
-  // ANALYZE REQUEST
-  // =====================================================
-
-  const analyzeProblem = async () => {
-
-    if (!problem.trim()) {
-
-      alert(
-        "Please tell us what help you need."
+      console.log(
+        "Voice recognition ended"
       );
 
-      return;
+      setListening(false);
+    };
 
-    }
-
-
-    setLoading(true);
-
-    setSearched(true);
-
-    setResults([]);
+    // IMPORTANT:
+    // Event handlers are assigned BEFORE start()
 
     try {
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/analyze`, {
-          method: "POST",
+      recognition.start();
 
-          headers: {
-            "Content-Type": "application/json"
-          },
-
-          body: JSON.stringify({
-
-            problem: problem.trim(),
-
-            location: location.trim(),
-
-            language: language
-
-          })
-
-        }
-      );
-
-
-      if (!response.ok) {
-
-        throw new Error(
-          `Server returned ${response.status}`
-        );
-
-      }
-
-
-      const data =
-        await response.json();
-
-
-      console.log(
-        "SAHAAY API RESPONSE:",
-        data
-      );
-
-
-      if (!data.success) {
-
-        alert(
-          data.message ||
-          "Unable to process your request."
-        );
-
-        return;
-
-      }
-
-
-      // =================================================
-      // SET RESPONSE DATA
-      // =================================================
-
-      setCategory(
-        data.category || "Available Resources"
-      );
-
-
-      setResourceType(
-        data.type || "Resources"
-      );
-
-
-      setPriority(
-        data.priority || "Normal"
-      );
-
-
-      setResults(
-        Array.isArray(data.resources)
-          ? data.resources
-          : []
-      );
-
-
-    } catch (error) {
+    } catch (err) {
 
       console.error(
-        "SAHAAY BACKEND ERROR:",
-        error
+        "Could not start microphone:",
+        err
       );
 
+      setListening(false);
+    }
+  };
+
+  // ==========================================================
+  // SPEAK RESULTS
+  // ==========================================================
+
+  const speakResults = () => {
+
+    if (
+      !("speechSynthesis" in window)
+    ) {
 
       alert(
-        "Cannot connect to SAHAAY backend.\n\n" +
-        "Please make sure Flask is running on port 5001."
+        "Text-to-speech is not supported in this browser."
       );
 
-    } finally {
-
-      setLoading(false);
-
+      return;
     }
 
+    if (
+      resources.length === 0
+    ) {
+
+      return;
+    }
+
+    // Stop currently speaking
+    if (speaking) {
+
+      window.speechSynthesis.cancel();
+
+      setSpeaking(false);
+
+      return;
+    }
+
+    const first =
+      resources[0];
+
+    const text =
+      `SAHAAY found ${resources.length} nearby ${problem.toLowerCase()} resources near ${location}. ` +
+      `The first resource is ${first.title}. ` +
+      `${
+        first.location
+          ? `It is located at ${first.location}.`
+          : ""
+      } ` +
+      `${
+        first.phone
+          ? `The phone number is ${first.phone}.`
+          : ""
+      }`;
+
+    const speech =
+      new SpeechSynthesisUtterance(
+        text
+      );
+
+    if (
+      language === "Hindi"
+    ) {
+
+      speech.lang = "hi-IN";
+
+    } else if (
+      language === "Urdu"
+    ) {
+
+      speech.lang = "ur-IN";
+
+    } else {
+
+      speech.lang = "en-IN";
+    }
+
+    speech.rate = 0.9;
+    speech.pitch = 1;
+
+    speech.onstart = () => {
+
+      setSpeaking(true);
+    };
+
+    speech.onend = () => {
+
+      setSpeaking(false);
+    };
+
+    speech.onerror = () => {
+
+      setSpeaking(false);
+    };
+
+    window.speechSynthesis.cancel();
+
+    window.speechSynthesis.speak(
+      speech
+    );
   };
 
+  // ==========================================================
+  // RESET
+  // ==========================================================
 
-  // =====================================================
-  // FORM SUBMIT
-  // =====================================================
+  const resetSearch = () => {
 
-  const handleSubmit = (event) => {
+    setResources([]);
 
-    event.preventDefault();
-
-    analyzeProblem();
-
-  };
-
-
-  // =====================================================
-  // CLEAR SEARCH
-  // =====================================================
-
-  const clearSearch = () => {
-
-    setProblem("");
-
-    setLocation("");
-
-    setResults([]);
-
-    setCategory("");
-
-    setResourceType("");
-
-    setPriority("");
+    setError("");
 
     setSearched(false);
 
+    if (
+      "speechSynthesis" in window
+    ) {
+
+      window.speechSynthesis.cancel();
+
+      setSpeaking(false);
+    }
   };
 
-
-  // =====================================================
-  // RETURN UI
-  // =====================================================
+  // ==========================================================
+  // UI
+  // ==========================================================
 
   return (
 
     <section className="help-assistant">
 
-
-      {/* =================================================
+      {/* =====================================================
           HEADER
-      ================================================= */}
+      ===================================================== */}
 
-      <div className="assistant-header">
+      <div className="help-header">
 
-        <h2>
-          How can we help you?
-        </h2>
+        <div className="help-header-icon">
 
-        <p>
-          Tell SAHAAY what you need.
-        </p>
-
-      </div>
-
-
-      {/* =================================================
-          SEARCH FORM
-      ================================================= */}
-
-      <form
-        onSubmit={handleSubmit}
-        className="help-form"
-      >
-
-
-        {/* =================================================
-            PROBLEM TEXTAREA
-        ================================================= */}
-
-        <textarea
-
-          value={problem}
-
-          onChange={(event) =>
-            setProblem(event.target.value)
-          }
-
-          placeholder={
-            language === "Hindi"
-              ? "उदाहरण: मुझे अपने पास एक अस्पताल चाहिए..."
-              : language === "Urdu"
-              ? "مثال: مجھے اپنے قریب ایک ہسپتال چاہیے..."
-              : "Example: I need a hospital near me..."
-          }
-
-          rows={5}
-
-        />
-
-
-        {/* =================================================
-            VOICE BUTTON
-        ================================================= */}
-
-        <button
-          type="button"
-          className={
-            listening
-              ? "voice-button listening"
-              : "voice-button"
-          }
-          onClick={startVoiceInput}
-        >
-
-          {listening ? (
-
-            <MicOff size={18} />
-
-          ) : (
-
-            <Mic size={18} />
-
-          )}
-
-          <span>
-
-            {listening
-              ? "Listening..."
-              : "Speak"}
-
-          </span>
-
-        </button>
-
-
-        {/* =================================================
-            LOCATION INPUT
-        ================================================= */}
-
-        <div className="location-input">
-
-          <MapPin size={20} />
-
-          <input
-
-            type="text"
-
-            value={location}
-
-            onChange={(event) =>
-              setLocation(event.target.value)
-            }
-
-            placeholder="Enter your city or location"
-
-          />
+          <MapPin size={26} />
 
         </div>
 
+        <div>
 
-        {/* =================================================
-            FIND HELP BUTTON
-        ================================================= */}
+          <h2>
+            Find help near you
+          </h2>
+
+          <p>
+            Search for nearby hospitals,
+            schools, education and
+            scholarship resources.
+          </p>
+
+        </div>
+
+      </div>
+
+      {/* =====================================================
+          SEARCH CARD
+      ===================================================== */}
+
+      <div className="help-search-card">
+
+        {/* LOCATION */}
+
+        <div className="input-group">
+
+          <label>
+            Location
+          </label>
+
+          <div className="input-wrapper">
+
+            <MapPin
+              size={20}
+              className="input-icon"
+            />
+
+            <input
+              type="text"
+              value={location}
+              onChange={(event) =>
+                setLocation(
+                  event.target.value
+                )
+              }
+              placeholder="Enter your location"
+            />
+
+            {/* MICROPHONE */}
+
+            <button
+              type="button"
+              className={
+                listening
+                  ? "voice-button listening"
+                  : "voice-button"
+              }
+              onClick={
+                startVoiceSearch
+              }
+              title={
+                listening
+                  ? "Listening..."
+                  : "Search by voice"
+              }
+              aria-label={
+                listening
+                  ? "Stop listening"
+                  : "Search by voice"
+              }
+            >
+
+              {listening ? (
+
+                <MicOff size={21} />
+
+              ) : (
+
+                <Mic size={21} />
+
+              )}
+
+            </button>
+
+          </div>
+
+          {listening && (
+
+            <div className="voice-status">
+
+              <span className="voice-dot" />
+
+              Listening... Speak your
+              location
+
+            </div>
+
+          )}
+
+        </div>
+
+        {/* CATEGORY */}
+
+        <div className="input-group">
+
+          <label>
+            What do you need?
+          </label>
+
+          <div className="select-wrapper">
+
+            <Search
+              size={19}
+              className="select-icon"
+            />
+
+            <select
+              value={problem}
+              onChange={(event) =>
+                setProblem(
+                  event.target.value
+                )
+              }
+            >
+
+              {categories.map(
+                (item) => (
+
+                  <option
+                    key={
+                      item.value
+                    }
+                    value={
+                      item.value
+                    }
+                  >
+                    {item.label}
+                  </option>
+
+                )
+              )}
+
+            </select>
+
+          </div>
+
+        </div>
+
+        {/* LANGUAGE */}
+
+        <div className="input-group">
+
+          <label>
+            Language
+          </label>
+
+          <div className="select-wrapper">
+
+            <select
+              value={language}
+              onChange={(event) =>
+                setLanguage(
+                  event.target.value
+                )
+              }
+            >
+
+              <option value="English">
+                English
+              </option>
+
+              <option value="Hindi">
+                हिन्दी
+              </option>
+
+              <option value="Urdu">
+                اردو
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+        {/* FIND HELP */}
 
         <button
-          type="submit"
+          type="button"
+          className="find-help-button"
+          onClick={findHelp}
           disabled={loading}
         >
 
           {loading ? (
 
             <>
-
               <Loader2
-                size={18}
+                size={21}
                 className="spin"
               />
 
-              <span>
-                Finding help...
-              </span>
-
+              Searching nearby
+              resources...
             </>
 
           ) : (
 
             <>
+              <Search size={21} />
 
-              <Search size={18} />
-
-              <span>
-                Find Help
-              </span>
-
+              Find Help
             </>
 
           )}
 
         </button>
 
+      </div>
 
-      </form>
+      {/* =====================================================
+          SEARCH PROCESS
+      ===================================================== */}
 
+      {loading && (
 
-      {/* =================================================
-          RESULTS
-      ================================================= */}
+        <div className="search-process">
 
-      {searched && !loading && (
+          <div className="process-title">
+            Finding resources near you...
+          </div>
 
-        <div className="results-section">
+          <div className="process-step active">
 
-
-          {/* =================================================
-              RESULTS HEADER
-          ================================================= */}
-
-          <div className="results-heading">
+            <span>1</span>
 
             <div>
+              <strong>
+                Finding location
+              </strong>
 
-              <h3>
-                {category || "Resources"}
-              </h3>
-
-              <p>
-                {resourceType ||
-                  "Available resources near you"}
-              </p>
-
+              <small>
+                Locating {location}
+              </small>
             </div>
-
-
-            {priority === "High" && (
-
-              <span className="emergency-badge">
-
-                High Priority
-
-              </span>
-
-            )}
 
           </div>
 
+          <div className="process-line" />
 
-          {/* =================================================
-              NO RESULTS
-          ================================================= */}
+          <div className="process-step active">
 
-          {results.length === 0 ? (
+            <span>2</span>
 
-            <div className="no-results">
+            <div>
+              <strong>
+                Searching nearby
+              </strong>
 
-              <h3>
-                No resources found
-              </h3>
+              <small>
+                Looking for{" "}
+                {problem.toLowerCase()}
+              </small>
+            </div>
 
-              <p>
-                Try another location or describe
-                your need differently.
-              </p>
+          </div>
+
+          <div className="process-line" />
+
+          <div className="process-step active">
+
+            <span>3</span>
+
+            <div>
+              <strong>
+                Preparing results
+              </strong>
+
+              <small>
+                Getting resource details
+              </small>
+            </div>
+
+          </div>
+
+        </div>
+
+      )}
+
+      {/* =====================================================
+          ERROR
+      ===================================================== */}
+
+      {error && !loading && (
+
+        <div className="help-error">
+
+          <AlertCircle size={24} />
+
+          <div>
+
+            <strong>
+              Unable to find services
+            </strong>
+
+            <p>
+              {error}
+            </p>
+
+            <button
+              type="button"
+              onClick={findHelp}
+            >
+              Search Again
+            </button>
+
+          </div>
+
+        </div>
+
+      )}
+
+      {/* =====================================================
+          RESULTS
+      ===================================================== */}
+
+      {!loading &&
+        !error &&
+        searched &&
+        resources.length > 0 && (
+
+          <div className="help-results">
+
+            {/* RESULTS HEADER */}
+
+            <div className="results-header">
+
+              <div>
+
+                <div className="success-label">
+
+                  <CheckCircle2
+                    size={19}
+                  />
+
+                  Search completed
+
+                </div>
+
+                <h2>
+
+                  {resources.length} nearby{" "}
+
+                  {problem.toLowerCase()}{" "}
+
+                  resources found
+
+                </h2>
+
+                <p>
+
+                  Showing actual resource
+                  details near{" "}
+
+                  <strong>
+                    {location}
+                  </strong>
+
+                </p>
+
+              </div>
+
+              {/* SPEAK BUTTON */}
+
+              <button
+                type="button"
+                className={
+                  speaking
+                    ? "speak-button speaking"
+                    : "speak-button"
+                }
+                onClick={
+                  speakResults
+                }
+              >
+
+                {speaking ? (
+
+                  <VolumeX size={20} />
+
+                ) : (
+
+                  <Volume2 size={20} />
+
+                )}
+
+                {speaking
+                  ? "Stop Speaking"
+                  : "Speak Results"}
+
+              </button>
 
             </div>
 
-          ) : (
+            {/* RESOURCE CARDS */}
 
+            <div className="help-results-grid">
 
-            /* =================================================
-               RESOURCE CARDS
-            ================================================= */
-
-            <div className="resource-grid">
-
-              {results.map(
-                (resource, index) => (
+              {resources.map(
+                (resource) => (
 
                   <ResourceCard
                     key={
-                      resource.id ||
-                      resource.name ||
-                      index
+                      resource.id
                     }
-                    resource={resource}
+
+                    resource={
+                      resource
+                    }
+
+                    saved={
+                      saved.includes(
+                        resource.id
+                      )
+                    }
+
+                    onSave={() =>
+                      toggleSave(
+                        resource.id
+                      )
+                    }
                   />
 
                 )
@@ -540,38 +1103,45 @@ function HelpAssistant({ language = "English" }) {
 
             </div>
 
-          )}
+          </div>
 
+        )}
 
-          {/* =================================================
-              CLEAR SEARCH
-          ================================================= */}
+      {/* =====================================================
+          NO RESULTS
+      ===================================================== */}
 
-          <div className="clear-search-wrapper">
+      {!loading &&
+        !error &&
+        searched &&
+        resources.length === 0 && (
+
+          <div className="no-results">
+
+            <MapPin size={45} />
+
+            <h3>
+              No nearby resources found
+            </h3>
+
+            <p>
+              Try another location or
+              choose a different service.
+            </p>
 
             <button
               type="button"
-              className="clear-search"
-              onClick={clearSearch}
+              onClick={resetSearch}
             >
-
               Search Again
-
             </button>
 
           </div>
 
-
-        </div>
-
-      )}
-
+        )}
 
     </section>
-
   );
-
 }
-
 
 export default HelpAssistant;

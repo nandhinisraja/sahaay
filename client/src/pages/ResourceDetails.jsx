@@ -34,15 +34,16 @@ function ResourceDetails({ resource }) {
       <div className="resource-details-container">
 
         <span className="resource-category">
-          {resource.category}
+          {resource.category || "Resource"}
         </span>
 
         <h1>
-          {resource.title}
+          {resource.title || "Untitled resource"}
         </h1>
 
         <p className="details-description">
-          {resource.description}
+          {resource.description ||
+            "No description available for this resource."}
         </p>
 
         <div className="details-info">
@@ -51,7 +52,7 @@ function ResourceDetails({ resource }) {
             <MapPin />
             <section>
               <strong>Location</strong>
-              <span>{resource.location}</span>
+              <span>{resource.location || "Not available"}</span>
             </section>
           </div>
 
@@ -59,7 +60,7 @@ function ResourceDetails({ resource }) {
             <Clock />
             <section>
               <strong>Availability</strong>
-              <span>{resource.availability}</span>
+              <span>{resource.availability || "Opening hours not available"}</span>
             </section>
           </div>
 
@@ -67,17 +68,26 @@ function ResourceDetails({ resource }) {
             <Phone />
             <section>
               <strong>Phone</strong>
-              <span>{resource.phone}</span>
+              <span>{resource.phone || "Phone number not available"}</span>
             </section>
           </div>
 
-          <div>
-            <CheckCircle />
-            <section>
-              <strong>Eligibility</strong>
-              <span>{resource.eligibility}</span>
-            </section>
-          </div>
+          {/*
+            "eligibility" is only ever set for Scholarship-type resources
+            (add it to convertApiResult() in Resources.jsx if you want it
+            populated). It doesn't exist for hospitals/schools, so this
+            row is hidden unless the data actually has it — otherwise it
+            always rendered blank/undefined.
+          */}
+          {resource.eligibility && (
+            <div>
+              <CheckCircle />
+              <section>
+                <strong>Eligibility</strong>
+                <span>{resource.eligibility}</span>
+              </section>
+            </div>
+          )}
 
         </div>
 

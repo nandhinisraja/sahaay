@@ -5,8 +5,7 @@ import {
   Bookmark,
   Share2,
   Navigation,
-  Globe,
-  Star
+  Globe
 } from "lucide-react";
 
 import "./ResourceCard.css";
@@ -17,171 +16,153 @@ function ResourceCard({
   onSave
 }) {
 
-  // ==========================================
-  // DIRECTIONS
-  // ==========================================
-
-  const handleDirections = () => {
-
-    // Use backend map URL if available
-    if (resource.mapUrl) {
-      window.open(resource.mapUrl, "_blank");
-      return;
-    }
-
-    // Otherwise create Google Maps search
-    const location =
-      resource.address ||
-      resource.location ||
-      resource.name ||
-      resource.title;
-
-    if (!location) {
-      alert("Location not available.");
-      return;
-    }
-
-    const url =
-      "https://www.google.com/maps/search/?api=1&query=" +
-      encodeURIComponent(location);
-
-    window.open(url, "_blank");
-  };
-
-
-  // ==========================================
-  // CALL
-  // ==========================================
-
-  const handleCall = () => {
-
-    const phone =
-      resource.phone;
-
-    if (
-      !phone ||
-      phone === "Phone number not available"
-    ) {
-      alert("Phone number not available.");
-      return;
-    }
-
-    window.location.href =
-      `tel:${phone}`;
-  };
-
-
-  // ==========================================
-  // SHARE
-  // ==========================================
-
-  const handleShare = async () => {
-
-    const title =
-      resource.name ||
-      resource.title ||
-      "SAHAAY Resource";
-
-    const address =
-      resource.address ||
-      resource.location ||
-      "";
-
-    const shareData = {
-
-      title: title,
-
-      text:
-        `${title}\n${address}\n\nFound using SAHAAY.`,
-
-      url:
-        resource.mapUrl ||
-        window.location.href
-    };
-
-
-    try {
-
-      if (navigator.share) {
-
-        await navigator.share(
-          shareData
-        );
-
-      } else {
-
-        await navigator.clipboard.writeText(
-          `${title}\n${address}\n${resource.mapUrl || ""}`
-        );
-
-        alert(
-          "Resource details copied!"
-        );
-      }
-
-    } catch (error) {
-
-      console.log(
-        "Share cancelled."
-      );
-    }
-  };
-
-
-  // ==========================================
-  // RESOURCE DATA
-  // ==========================================
-
-  const title =
-    resource.name ||
+  const name =
     resource.title ||
+    resource.name ||
     "Resource";
 
-
   const address =
-    resource.address ||
     resource.location ||
+    resource.address ||
     "Address not available";
-
 
   const phone =
     resource.phone ||
     "Phone number not available";
 
+  const website =
+    resource.website || "";
 
   const openingHours =
-    resource.openingHours ||
     resource.availability ||
+    resource.openingHours ||
     "Opening hours not available";
-
 
   const type =
     resource.type ||
     resource.category ||
-    "Community Service";
+    "Resource";
+
+  const description =
+    resource.description ||
+    `Nearby ${type.toLowerCase()} available around your selected location.`;
+
+  const mapUrl =
+    resource.mapUrl ||
+    (
+      resource.latitude &&
+      resource.longitude
+        ? `https://www.google.com/maps/search/?api=1&query=${resource.latitude},${resource.longitude}`
+        : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`
+    );
 
 
-  // ==========================================
-  // RETURN CARD
-  // ==========================================
+  // ---------------------------------------------------------
+  // DIRECTIONS
+  // ---------------------------------------------------------
+
+  const handleDirections = () => {
+    window.open(
+      mapUrl,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
+
+
+  // ---------------------------------------------------------
+  // CALL
+  // ---------------------------------------------------------
+
+  const handleCall = () => {
+
+    if (
+      !resource.phone ||
+      resource.phone === "Phone number not available"
+    ) {
+      alert(`Phone number is not available for this ${type.toLowerCase()}.`);
+      return;
+    }
+
+    window.location.href =
+      `tel:${resource.phone}`;
+  };
+
+
+  // ---------------------------------------------------------
+  // WEBSITE
+  // ---------------------------------------------------------
+
+  const handleWebsite = () => {
+
+    if (!website) {
+      alert("Website is not available.");
+      return;
+    }
+
+    const url =
+      website.startsWith("http")
+        ? website
+        : `https://${website}`;
+
+    window.open(
+      url,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
+
+
+  // ---------------------------------------------------------
+  // SHARE
+  // ---------------------------------------------------------
+
+  const handleShare = async () => {
+
+    const shareText =
+      `${name}\n${address}\n${phone}`;
+
+    try {
+
+      if (navigator.share) {
+
+        await navigator.share({
+          title: name,
+          text: shareText,
+          url: mapUrl
+        });
+
+      } else {
+
+        await navigator.clipboard.writeText(
+          `${name}\n${address}\n${phone}\n${mapUrl}`
+        );
+
+        alert(`${type} details copied!`);
+
+      }
+
+    } catch (error) {
+
+      console.log("Share cancelled.");
+
+    }
+  };
+
 
   return (
 
     <article className="resource-card">
 
-
-      {/* =====================================
-          TOP
-      ====================================== */}
+      {/* =====================================================
+          HEADER
+      ===================================================== */}
 
       <div className="resource-card-top">
 
         <span className="resource-type">
-
           {type}
-
         </span>
-
 
         <button
           type="button"
@@ -191,7 +172,7 @@ function ResourceCard({
               : "save-button"
           }
           onClick={onSave}
-          title="Save resource"
+          title={`Save ${type.toLowerCase()}`}
         >
 
           <Bookmark
@@ -208,32 +189,27 @@ function ResourceCard({
       </div>
 
 
-      {/* =====================================
-          TITLE
-      ====================================== */}
+      {/* =====================================================
+          RESOURCE NAME
+      ===================================================== */}
 
       <h3 className="resource-title">
-
-        {title}
-
+        {name}
       </h3>
 
 
-      {/* =====================================
+      {/* =====================================================
           DESCRIPTION
-      ====================================== */}
+      ===================================================== */}
 
       <p className="resource-description">
-
-        {resource.description ||
-          `Nearby ${type} available through SAHAAY.`}
-
+        {description}
       </p>
 
 
-      {/* =====================================
-          DETAILS
-      ====================================== */}
+      {/* =====================================================
+          RESOURCE DETAILS
+      ===================================================== */}
 
       <div className="resource-details">
 
@@ -245,9 +221,8 @@ function ResourceCard({
           <MapPin size={18} />
 
           <span>
-
+            <strong>Address:</strong>{" "}
             {address}
-
           </span>
 
         </div>
@@ -260,9 +235,8 @@ function ResourceCard({
           <Phone size={18} />
 
           <span>
-
+            <strong>Phone:</strong>{" "}
             {phone}
-
           </span>
 
         </div>
@@ -275,57 +249,30 @@ function ResourceCard({
           <Clock size={18} />
 
           <span>
-
+            <strong>Hours:</strong>{" "}
             {openingHours}
-
           </span>
 
         </div>
 
 
-        {/* RATING */}
-
-        {resource.rating && (
-
-          <div className="resource-detail">
-
-            <Star
-              size={18}
-              fill="currentColor"
-            />
-
-            <span>
-
-              {resource.rating}
-
-              {resource.reviewCount
-                ? ` (${resource.reviewCount} reviews)`
-                : ""}
-
-            </span>
-
-          </div>
-
-        )}
-
-
         {/* WEBSITE */}
 
-        {resource.website && (
+        {website && (
 
           <div className="resource-detail">
 
             <Globe size={18} />
 
-            <a
-              href={resource.website}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
+              onClick={handleWebsite}
+              className="website-button"
             >
 
               Visit Website
 
-            </a>
+            </button>
 
           </div>
 
@@ -334,54 +281,43 @@ function ResourceCard({
       </div>
 
 
-      {/* =====================================
-          COST / SOURCE
-      ====================================== */}
+      {/* =====================================================
+          LOCATION
+      ===================================================== */}
 
-      <div className="resource-meta">
+      {resource.latitude &&
+       resource.longitude && (
 
-
-        <span>
-
-          Cost:{" "}
-
-          <strong>
-
-            {resource.cost ||
-              "Contact provider"}
-
-          </strong>
-
-        </span>
-
-
-        {resource.source && (
+        <div className="resource-meta">
 
           <span>
 
-            Source:{" "}
+            📍 Coordinates:
 
-            <strong>
+            {" "}
 
-              {resource.source}
+            {resource.latitude.toFixed
+              ? resource.latitude.toFixed(5)
+              : resource.latitude}
 
-            </strong>
+            {", "}
+
+            {resource.longitude.toFixed
+              ? resource.longitude.toFixed(5)
+              : resource.longitude}
 
           </span>
 
-        )}
+        </div>
 
-      </div>
+      )}
 
 
-      {/* =====================================
-          ACTIONS
-      ====================================== */}
+      {/* =====================================================
+          ACTION BUTTONS
+      ===================================================== */}
 
       <div className="resource-actions">
-
-
-        {/* DIRECTIONS */}
 
         <button
           type="button"
@@ -395,8 +331,6 @@ function ResourceCard({
         </button>
 
 
-        {/* CALL */}
-
         <button
           type="button"
           onClick={handleCall}
@@ -408,8 +342,6 @@ function ResourceCard({
 
         </button>
 
-
-        {/* SHARE */}
 
         <button
           type="button"
@@ -424,25 +356,7 @@ function ResourceCard({
 
       </div>
 
-
-      {/* =====================================
-          LAST UPDATED
-      ====================================== */}
-
-      {resource.lastUpdated && (
-
-        <div className="resource-updated">
-
-          Last updated:{" "}
-
-          {resource.lastUpdated}
-
-        </div>
-
-      )}
-
     </article>
-
   );
 }
 
